@@ -1,1610 +1,1493 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام متابعة المشاركة الرقمية - الهيئة العامة للطيران المدني 2026</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<title>نظام متابعة المشاركة الرقمية - GCAA 2026</title>
 <style>
-:root {
-  --navy: #1F3864;
-  --blue: #2E6797;
-  --gold: #D4A72A;
-  --light-bg: #f4f7fb;
-  --white: #ffffff;
-  --text: #1a1a2e;
-  --text-light: #5a6a85;
-  --border: #dce4f0;
-  --success: #27ae60;
-  --warning: #f39c12;
-  --danger: #e74c3c;
-  --sidebar-w: 260px;
-  --radius: 10px;
-  --shadow: 0 2px 12px rgba(31,56,100,0.10);
+:root{--navy:#1F3864;--blue:#2E6797;--gold:#D4A72A;--light:#f4f7fb;--white:#fff;--text:#1a1a2e;--muted:#5a6a85;--border:#dce4f0;--green:#27ae60;--orange:#f39c12;--red:#e74c3c;--sw:265px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Cairo","Segoe UI",Arial,sans-serif;background:var(--light);color:var(--text);direction:rtl;min-height:100vh;display:flex}
+.sidebar{width:var(--sw);background:var(--navy);min-height:100vh;position:fixed;right:0;top:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sb-logo{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,.12);text-align:center}
+.sb-logo .org{color:var(--gold);font-size:11px;font-weight:700;margin-bottom:3px}
+.sb-logo .sys{color:#fff;font-size:13px;font-weight:600;line-height:1.4}
+.sb-logo .yr{background:var(--gold);color:var(--navy);font-size:11px;font-weight:800;padding:2px 10px;border-radius:20px;display:inline-block;margin-top:5px}
+.sb-nav{padding:8px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 15px;cursor:pointer;color:rgba(255,255,255,.72);font-size:12.5px;font-weight:500;transition:.2s;border-right:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-item.active{background:rgba(212,167,42,.18);color:var(--gold);border-right-color:var(--gold);font-weight:700}
+.nav-item .ni{font-size:14px;min-width:18px;text-align:center}
+.sb-foot{padding:8px 14px;border-top:1px solid rgba(255,255,255,.1);font-size:10px;color:rgba(255,255,255,.4);text-align:center}
+.main{margin-right:var(--sw);flex:1;display:flex;flex-direction:column}
+.topbar{background:#fff;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tb-title{font-size:16px;font-weight:700;color:var(--navy)}
+.tb-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.tb-actions{display:flex;gap:7px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:.2s;font-family:inherit}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--navy)}
+.btn-gold{background:var(--gold);color:var(--navy)}.btn-gold:hover{background:#c49920}
+.btn-outline{background:transparent;color:var(--navy);border:2px solid var(--border)}.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-danger{background:#fee;color:var(--red);border:1px solid #fcc}.btn-danger:hover{background:var(--red);color:#fff}
+.btn-green{background:#d5f5e3;color:var(--green)}.btn-green:hover{background:var(--green);color:#fff}
+.btn-sm{padding:4px 10px;font-size:11px}
+.ca{padding:20px 24px;flex:1}
+.section{display:none}.section.active{display:block}
+.sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.sec-title{font-size:19px;font-weight:800;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.sec-hdr-btns{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat-card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 10px rgba(31,56,100,.08);border-top:4px solid var(--border)}
+.stat-card.c-navy{border-top-color:var(--navy)}.stat-card.c-blue{border-top-color:var(--blue)}
+.stat-card.c-gold{border-top-color:var(--gold)}.stat-card.c-green{border-top-color:var(--green)}
+.stat-card.c-orange{border-top-color:var(--orange)}.stat-card.c-red{border-top-color:var(--red)}
+.sl{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:5px}
+.sv{font-size:32px;font-weight:800;color:var(--navy);line-height:1}
+.ss{font-size:10px;color:var(--muted);margin-top:3px}
+.ov-card{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:10px;padding:20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:18px;box-shadow:0 4px 20px rgba(31,56,100,.3)}
+.ov-pct{font-size:52px;font-weight:900;color:var(--gold);line-height:1}
+.ov-mid{flex:1}
+.ov-bar-bg{background:rgba(255,255,255,.2);border-radius:20px;height:12px;overflow:hidden;margin-top:7px}
+.ov-bar-fill{background:linear-gradient(90deg,var(--gold),#f0c040);height:100%;border-radius:20px;transition:width 1s ease}
+.ov-nums{display:flex;gap:16px;text-align:center}
+.ov-num .n{font-size:26px;font-weight:900;color:var(--gold)}.ov-num .l{font-size:10px;opacity:.8}
+.prog-sec{background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 10px rgba(31,56,100,.08);margin-bottom:16px}
+.prog-sec-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:7px}
+.prog-item{margin-bottom:10px}
+.prog-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:11px;font-weight:600}
+.prog-bar{background:var(--light);border-radius:20px;height:8px;overflow:hidden}
+.pf-green{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+.pf-orange{background:linear-gradient(90deg,#f39c12,#f1c40f)}
+.pf-navy{background:linear-gradient(90deg,var(--navy),var(--blue))}
+.pf-gold{background:linear-gradient(90deg,var(--gold),#f0c040)}
+/* TABLE */
+.tw{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(31,56,100,.08);overflow:hidden;margin-bottom:14px;overflow-x:auto}
+.dt{width:100%;border-collapse:collapse;font-size:12px;min-width:600px}
+.dt thead tr{background:var(--navy);color:#fff}
+.dt th{padding:9px 11px;text-align:right;font-weight:700;font-size:11px;white-space:nowrap}
+.dt td{padding:8px 11px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+.dt tbody tr:hover{background:rgba(46,103,151,.03)}
+.dt tbody tr:last-child td{border-bottom:none}
+.dt tbody tr.drag-over{background:rgba(212,167,42,.15);outline:2px dashed var(--gold)}
+.dt tbody tr.dragging{opacity:.4}
+.cd{font-weight:800;color:var(--blue);font-size:13px;white-space:nowrap}
+.wd{font-weight:700;color:var(--gold);white-space:nowrap}
+/* DRAG HANDLE */
+.drag-handle{cursor:grab;color:#bbb;font-size:16px;padding:0 4px;user-select:none;line-height:1}
+.drag-handle:hover{color:var(--blue)}
+.drag-handle:active{cursor:grabbing}
+/* EDITABLE */
+.ec{cursor:text;border-radius:4px;padding:2px 4px;min-height:20px;min-width:30px;outline:none;border:1px solid transparent;transition:.15s;display:block;width:100%;line-height:1.5;font-size:12px;font-family:inherit;background:transparent;white-space:pre-wrap;word-break:break-word}
+.ec:hover{border-color:var(--border);background:rgba(46,103,151,.04)}
+.ec:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(46,103,151,.12)}
+/* LINK */
+.lc-wrap{display:flex;flex-direction:column;gap:2px}
+.lc-input{border:1px solid var(--border);border-radius:5px;padding:3px 7px;font-size:11px;width:100%;min-width:85px;font-family:inherit;outline:none;transition:.15s;direction:ltr;text-align:left}
+.lc-input:focus{border-color:var(--blue)}
+.lc-link{font-size:11px;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:2px}
+.lc-link:hover{text-decoration:underline}
+/* STATUS SELECT */
+.ss-sel{border:none;border-radius:20px;padding:3px 20px 3px 8px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 10 10'%3E%3Cpath d='M2 3l3 4 3-4' fill='none' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 5px center}
+.sd{background:#d5f5e3;color:#1e8449}.si{background:#fef9e7;color:#b7770d}.sn{background:#fde8e8;color:#922b21}.sc2{background:#f2f3f4;color:#555}.sp{background:#eaf4fb;color:#1a5276}
+/* ADD ROW */
+.add-row-btn{display:flex;align-items:center;justify-content:center;padding:9px;border-top:1px solid var(--border);background:#fafbfd;cursor:pointer;color:var(--blue);font-size:12px;font-weight:600;gap:6px;transition:.2s}
+.add-row-btn:hover{background:rgba(46,103,151,.06)}
+/* DELETE */
+.del-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px;transition:.2s}
+.del-btn:hover{background:#fee;color:var(--red)}
+/* SORT BTN */
+.sort-btn{background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:10px;padding:2px 6px;border-radius:4px;margin-right:4px;font-family:inherit}
+.sort-btn:hover{background:rgba(255,255,255,.3)}
+/* SEARCH */
+.search-row{display:flex;gap:9px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.si-input{padding:7px 11px;border:2px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit;outline:none;width:220px;direction:rtl}
+.si-input:focus{border-color:var(--blue)}
+/* WEEKLY REPORT */
+.wr-header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:10px;padding:20px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-start}
+.wr-date{font-size:11px;opacity:.8;margin-top:4px}
+.wr-block{background:#fff;border-radius:10px;padding:18px;box-shadow:0 2px 10px rgba(31,56,100,.08);margin-bottom:14px}
+.wr-block-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--border);padding-bottom:8px}
+.wr-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;padding:8px 10px;background:var(--light);border-radius:7px;border-right:3px solid var(--gold)}
+.wr-item-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:12px;padding:0 3px;margin-right:auto;transition:.2s}
+.wr-item-del:hover{color:var(--red)}
+.wr-add-row{display:flex;gap:8px;margin-top:8px}
+.wr-input{flex:1;padding:8px 12px;border:2px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit;outline:none;direction:rtl}
+.wr-input:focus{border-color:var(--blue)}
+.wr-tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;margin-left:5px}
+.wr-tag.done{background:#d5f5e3;color:#1e8449}
+.wr-tag.dp{background:#d6eaf8;color:var(--blue)}
+/* PRINT */
+@media print{
+  .sidebar,.topbar,.sec-hdr-btns,.add-row-btn,.del-btn,.drag-handle,.mo,.toast,.wr-add-row,.wr-item-del,.search-row,.sort-btn{display:none!important}
+  .main{margin-right:0!important}
+  .section{display:block!important}
+  .section:not(.print-target){display:none!important}
+  .dt{font-size:10px}.ec{border:none!important}
+  body{background:#fff!important}
+  .wr-block,.wr-header,.prog-sec{box-shadow:none!important;border:1px solid #ddd}
+  @page{margin:12mm;size:A4}
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Segoe UI', 'Arial', sans-serif;
-  background: var(--light-bg);
-  color: var(--text);
-  direction: rtl;
-  min-height: 100vh;
-  display: flex;
-}
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center}
+.mo.open{display:flex}
+.mo-box{background:#fff;border-radius:12px;padding:24px;width:480px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);direction:rtl}
+.mo-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:16px}
+.mo-acts{display:flex;gap:8px;margin-top:14px}
+.fg{margin-bottom:12px}
+.fl{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;display:block}
+.fc{width:100%;padding:8px 11px;border:2px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit;direction:rtl;outline:none;transition:.2s}
+.fc:focus{border-color:var(--blue)}
+textarea.fc{min-height:65px;resize:vertical}
+.ev-box{background:var(--light);border-radius:6px;padding:7px 9px;font-size:11px;line-height:1.8;color:var(--muted);border:1px solid var(--border);white-space:pre-line;max-height:90px;overflow-y:auto;cursor:text}
+.ev-box:focus{outline:2px solid var(--blue);background:#fff}
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:20px;background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:1000;transform:translateY(80px);opacity:0;transition:.3s;border-right:4px solid var(--gold)}
+.toast.show{transform:translateY(0);opacity:1}
 
-/* ========== SIDEBAR ========== */
-.sidebar {
-  width: var(--sidebar-w);
-  background: var(--navy);
-  min-height: 100vh;
-  position: fixed;
-  right: 0; top: 0;
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.15);
-  overflow-y: auto;
-}
-.sidebar-logo {
-  padding: 20px 16px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.12);
-  text-align: center;
-}
-.sidebar-logo .org-name {
-  color: var(--gold);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-.sidebar-logo .sys-name {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-.sidebar-logo .year-badge {
-  background: var(--gold);
-  color: var(--navy);
-  font-size: 11px;
-  font-weight: 800;
-  padding: 2px 10px;
-  border-radius: 20px;
-  display: inline-block;
-  margin-top: 6px;
-}
-.sidebar-nav { padding: 10px 0; flex: 1; }
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 18px;
-  cursor: pointer;
-  color: rgba(255,255,255,0.75);
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
-  border-right: 3px solid transparent;
-  position: relative;
-}
-.nav-item:hover {
-  background: rgba(255,255,255,0.07);
-  color: #fff;
-}
-.nav-item.active {
-  background: rgba(212,167,42,0.18);
-  color: var(--gold);
-  border-right-color: var(--gold);
-  font-weight: 700;
-}
-.nav-item .nav-icon { font-size: 16px; min-width: 22px; text-align: center; }
-.nav-item .nav-badge {
-  margin-right: auto;
-  background: var(--gold);
-  color: var(--navy);
-  font-size: 10px;
-  font-weight: 800;
-  padding: 1px 7px;
-  border-radius: 10px;
-}
-.sidebar-footer {
-  padding: 12px 16px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  font-size: 11px;
-  color: rgba(255,255,255,0.4);
-  text-align: center;
-}
+/* ── DASHBOARD KANBAN ── */
+.kb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.kb-col{background:var(--bg);border-radius:10px;padding:10px}
+.kb-col-title{font-size:11px;font-weight:800;margin-bottom:8px;padding:5px 10px;border-radius:6px;text-align:center;letter-spacing:.5px}
+.kb-col-title.done{background:#d5f5e3;color:#1e8449}
+.kb-col-title.prog{background:#d6eaf8;color:#1a5276}
+.kb-col-title.not{background:#f2f3f4;color:#555}
+.dp-card{background:#fff;border-radius:8px;padding:9px 12px;margin-bottom:6px;box-shadow:0 1px 5px rgba(0,0,0,.07);cursor:grab;user-select:none;transition:.15s}
+.dp-card:active{cursor:grabbing}
+.dp-card:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.dp-card.done{border-right:4px solid #27ae60}
+.dp-card.prog{border-right:4px solid #2e6797}
+.dp-card.not{border-right:4px solid #ddd}
+.dp-card .dc{font-size:10px;font-weight:900;color:var(--gold);margin-bottom:2px}
+.dp-card .dn{font-size:11px;color:var(--navy);line-height:1.4}
+.dp-card .dw{font-size:10px;color:var(--muted);margin-top:3px}
+.dp-card.drag-over{outline:2px dashed var(--gold);background:#fffde7}
 
-/* ========== MAIN CONTENT ========== */
-.main {
-  margin-right: var(--sidebar-w);
-  flex: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.topbar {
-  background: var(--white);
-  padding: 14px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.topbar-title { font-size: 18px; font-weight: 700; color: var(--navy); }
-.topbar-meta { font-size: 12px; color: var(--text-light); margin-top: 2px; }
-.topbar-actions { display: flex; gap: 10px; align-items: center; }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-.btn-primary { background: var(--blue); color: #fff; }
-.btn-primary:hover { background: var(--navy); }
-.btn-gold { background: var(--gold); color: var(--navy); }
-.btn-gold:hover { background: #c49920; }
-.btn-outline { background: transparent; color: var(--navy); border: 2px solid var(--border); }
-.btn-outline:hover { border-color: var(--blue); color: var(--blue); }
-.btn-sm { padding: 5px 12px; font-size: 12px; }
-.btn-danger { background: #e74c3c; color: #fff; }
+/* ── QUOTE WIDGET ── */
+.qw{position:fixed;bottom:22px;right:22px;width:270px;background:var(--navy);color:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 6px 24px rgba(0,0,0,.35);z-index:890;border-top:3px solid var(--gold);transition:.3s}
+.qw-label{font-size:10px;color:var(--gold);font-weight:800;margin-bottom:7px;letter-spacing:.5px}
+.qw-text{font-size:12.5px;line-height:1.85;font-style:italic;margin-bottom:6px}
+.qw-author{font-size:10px;opacity:.65;direction:ltr;text-align:left}
+.qw-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.qw-btn{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:6px;padding:3px 9px;font-size:10px;cursor:pointer;transition:.2s}
+.qw-btn:hover{background:rgba(255,255,255,.25)}
+.qw-hide{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:12px}
 
-.content-area { padding: 24px 28px; flex: 1; }
+/* ── AUDIO PLAYER ── */
 
-/* ========== SECTION HEADER ========== */
-.section-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.section-title-block .section-title { font-size: 22px; font-weight: 800; color: var(--navy); }
-.section-title-block .section-subtitle { font-size: 13px; color: var(--text-light); margin-top: 4px; }
 
-/* ========== STAT CARDS ========== */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.stat-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  border-top: 4px solid var(--border);
-  transition: transform 0.2s;
-}
-.stat-card:hover { transform: translateY(-2px); }
-.stat-card.navy { border-top-color: var(--navy); }
-.stat-card.blue { border-top-color: var(--blue); }
-.stat-card.gold { border-top-color: var(--gold); }
-.stat-card.success { border-top-color: var(--success); }
-.stat-card.warning { border-top-color: var(--warning); }
-.stat-card.danger { border-top-color: var(--danger); }
-.stat-label { font-size: 12px; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.stat-value { font-size: 36px; font-weight: 800; color: var(--navy); line-height: 1; }
-.stat-sub { font-size: 12px; color: var(--text-light); margin-top: 6px; }
-
-/* ========== PROGRESS BARS ========== */
-.progress-section { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 24px; }
-.progress-section-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
-.progress-item { margin-bottom: 14px; }
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-.progress-bar-wrap {
-  background: var(--light-bg);
-  border-radius: 20px;
-  height: 10px;
-  overflow: hidden;
-}
-.progress-bar-fill {
-  height: 100%;
-  border-radius: 20px;
-  transition: width 0.8s ease;
-}
-.fill-success { background: linear-gradient(90deg, var(--success), #2ecc71); }
-.fill-warning { background: linear-gradient(90deg, var(--warning), #f1c40f); }
-.fill-navy { background: linear-gradient(90deg, var(--navy), var(--blue)); }
-.fill-gold { background: linear-gradient(90deg, var(--gold), #f0c040); }
-
-/* ========== OVERALL PROGRESS ========== */
-.overall-card {
-  background: linear-gradient(135deg, var(--navy), var(--blue));
-  color: #fff;
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 20px rgba(31,56,100,0.3);
-}
-.overall-card .big-percent {
-  font-size: 64px;
-  font-weight: 900;
-  color: var(--gold);
-  line-height: 1;
-}
-.overall-card .label { font-size: 14px; opacity: 0.85; margin-top: 6px; }
-.overall-progress-bar {
-  flex: 1;
-  margin: 0 30px;
-}
-.overall-progress-bar .bar-bg {
-  background: rgba(255,255,255,0.2);
-  border-radius: 20px;
-  height: 16px;
-  overflow: hidden;
-  margin-top: 10px;
-}
-.overall-progress-bar .bar-fill {
-  background: linear-gradient(90deg, var(--gold), #f0c040);
-  height: 100%;
-  border-radius: 20px;
-  transition: width 1s ease;
-}
-
-/* ========== TABLES ========== */
-.table-wrap {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-.data-table thead tr {
-  background: var(--navy);
-  color: #fff;
-}
-.data-table th {
-  padding: 12px 14px;
-  text-align: right;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-}
-.data-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-  line-height: 1.5;
-}
-.data-table tbody tr:hover { background: rgba(46,103,151,0.04); }
-.data-table tbody tr:last-child td { border-bottom: none; }
-.data-table .code-cell {
-  font-weight: 800;
-  color: var(--blue);
-  font-size: 14px;
-  white-space: nowrap;
-}
-.data-table .weight-cell {
-  font-weight: 700;
-  color: var(--gold);
-  white-space: nowrap;
-}
-
-/* ========== STATUS BADGE ========== */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-}
-.status-done { background: #d5f5e3; color: #1e8449; }
-.status-inprogress { background: #fef9e7; color: #b7770d; }
-.status-notstarted { background: #fdf2f8; color: #922b21; }
-.status-pending { background: #eaf4fb; color: #1a5276; }
-.status-published { background: #d5f5e3; color: #1e8449; }
-.status-waiting { background: #fef9e7; color: #b7770d; }
-.status-new { background: #eaf4fb; color: #1a5276; }
-.status-closed { background: #f2f3f4; color: #555; }
-.status-ready { background: #d6eaf8; color: #1a5276; }
-
-/* ========== STATUS SELECT ========== */
-.status-select {
-  border: none;
-  border-radius: 20px;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3l3 4 3-4' fill='none' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: left 8px center;
-  padding-left: 22px;
-}
-
-/* ========== EDITABLE CELLS ========== */
-.editable {
-  cursor: text;
-  border-radius: 4px;
-  padding: 2px 4px;
-  min-height: 22px;
-  transition: background 0.2s;
-}
-.editable:hover { background: rgba(46,103,151,0.06); }
-.editable:focus {
-  outline: 2px solid var(--blue);
-  background: #fff;
-  border-radius: 4px;
-}
-.edit-indicator { font-size: 10px; color: var(--text-light); opacity: 0; transition: opacity 0.2s; }
-td:hover .edit-indicator { opacity: 1; }
-
-/* ========== CARDS ========== */
-.card {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px;
-  margin-bottom: 16px;
-}
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--border);
-}
-.card-title { font-size: 15px; font-weight: 700; color: var(--navy); }
-
-/* ========== SECTIONS DISPLAY ========== */
-.section { display: none; }
-.section.active { display: block; }
-
-/* ========== ADD ROW BUTTON ========== */
-.add-row-bar {
-  background: var(--white);
-  border-radius: 0 0 var(--radius) var(--radius);
-  padding: 10px 14px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-start;
-}
-
-/* ========== QUARTERLY TABLE ========== */
-.q-table-wrap { overflow-x: auto; }
-
-/* ========== MODAL ========== */
-.modal-overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 500;
-  align-items: center;
-  justify-content: center;
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--white);
-  border-radius: 14px;
-  padding: 28px;
-  width: 520px;
-  max-width: 95vw;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  direction: rtl;
-}
-.modal-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
-.form-group { margin-bottom: 16px; }
-.form-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: inherit;
-  direction: rtl;
-  transition: border 0.2s;
-  outline: none;
-}
-.form-control:focus { border-color: var(--blue); }
-textarea.form-control { min-height: 80px; resize: vertical; }
-.modal-actions { display: flex; gap: 10px; justify-content: flex-start; margin-top: 20px; }
-
-/* ========== EVIDENCE BOX ========== */
-.evidence-box {
-  background: var(--light-bg);
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--text-light);
-  max-height: 120px;
-  overflow-y: auto;
-  border: 1px solid var(--border);
-  white-space: pre-line;
-}
-
-/* ========== NOTIFICATIONS ========== */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
-  background: var(--navy);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  z-index: 1000;
-  transform: translateY(80px);
-  opacity: 0;
-  transition: all 0.3s;
-  border-right: 4px solid var(--gold);
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-
-/* ========== PRINT ========== */
-@media print {
-  .sidebar, .topbar, .section-header .btn, .add-row-bar, .modal-overlay { display: none !important; }
-  .main { margin-right: 0 !important; }
-  body { background: #fff !important; }
-  .section { display: block !important; }
-  .section:not(.print-active) { display: none !important; }
-  .data-table { font-size: 11px; }
-  .stat-card { box-shadow: none; border: 1px solid #ddd; }
-  @page { margin: 15mm; size: A4; }
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 768px) {
-  .sidebar { width: 100%; height: auto; position: relative; min-height: auto; }
-  .main { margin-right: 0; }
-  .stat-grid { grid-template-columns: 1fr 1fr; }
-}
-.tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  margin: 1px;
-}
-.tag-blue { background: #d6eaf8; color: var(--blue); }
-.tag-gold { background: #fef9e7; color: #8a6a00; }
-.tag-green { background: #d5f5e3; color: #1e8449; }
-
-/* search bar */
-.search-bar {
-  display: flex; gap: 10px; margin-bottom: 16px; align-items: center;
-}
-.search-input {
-  padding: 8px 14px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: inherit;
-  outline: none;
-  width: 280px;
-  direction: rtl;
-}
-.search-input:focus { border-color: var(--blue); }
+/* ── FLOATING CHAT ── */
+.chat-fab{position:fixed;bottom:28px;left:28px;width:54px;height:54px;border-radius:50%;background:var(--navy);color:#fff;font-size:26px;border:none;cursor:pointer;box-shadow:0 4px 18px rgba(31,56,100,.45);z-index:1100;display:flex;align-items:center;justify-content:center;transition:.2s}
+.chat-fab:hover{background:var(--blue);transform:scale(1.08)}
+.chat-fab .chat-badge{position:absolute;top:2px;right:2px;width:10px;height:10px;background:#27ae60;border-radius:50%;border:2px solid #fff}
+.chat-box{position:fixed;bottom:92px;left:28px;width:340px;max-height:480px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.22);z-index:1100;display:none;flex-direction:column;overflow:hidden;border:1px solid #e8e8e8}
+.chat-box.open{display:flex}
+.chat-head{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.chat-head .ch-icon{font-size:20px}
+.chat-head .ch-sub{font-size:10px;font-weight:400;opacity:.8;display:block}
+.chat-head .ch-close{margin-right:auto;background:none;border:none;color:#fff;font-size:18px;cursor:pointer;opacity:.7}
+.chat-head .ch-close:hover{opacity:1}
+.chat-key-bar{padding:8px 12px;background:#f8f9fb;border-bottom:1px solid #eee;display:flex;gap:6px}
+.chat-key-bar input{flex:1;padding:5px 8px;border:1px solid #ddd;border-radius:7px;font-size:11px;direction:ltr;font-family:monospace}
+.chat-key-bar button{padding:5px 10px;background:var(--gold);color:#fff;border:none;border-radius:7px;font-size:11px;cursor:pointer;font-weight:700}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:180px}
+.msg-ai{background:#f0f4fa;border-radius:12px 12px 12px 0;padding:9px 12px;font-size:13px;line-height:1.6;color:#222;max-width:90%;align-self:flex-start}
+.msg-user{background:var(--navy);color:#fff;border-radius:12px 12px 0 12px;padding:9px 12px;font-size:13px;line-height:1.6;max-width:90%;align-self:flex-end}
+.msg-typing{background:#f0f4fa;border-radius:12px;padding:9px 14px;font-size:18px;align-self:flex-start;letter-spacing:3px;color:#aaa}
+.chat-input-row{padding:10px 12px;border-top:1px solid #eee;display:flex;gap:7px}
+.chat-input-row textarea{flex:1;padding:8px 10px;border:1px solid #ddd;border-radius:10px;font-size:13px;resize:none;height:38px;font-family:inherit;direction:rtl}
+.chat-input-row button{padding:8px 14px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer}
+.chat-input-row button:hover{background:var(--blue)}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="org-name">الهيئة العامة للطيران المدني</div>
-    <div class="sys-name">نظام متابعة المشاركة الرقمية</div>
-    <div class="year-badge">2026</div>
+  <div class="sb-logo">
+    <div class="org">الهيئة العامة للطيران المدني</div>
+    <div class="sys">نظام متابعة المشاركة الرقمية</div>
+    <div class="yr">2026</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-item active" onclick="showSection('dashboard')">
-      <span class="nav-icon">📊</span><span>لوحة التحكم</span>
-    </div>
-    <div class="nav-item" onclick="showSection('dp')">
-      <span class="nav-icon">📋</span><span>معايير DP1-DP11</span>
-      <span class="nav-badge" id="badge-dp">11</span>
-    </div>
-    <div class="nav-item" onclick="showSection('as4')">
-      <span class="nav-icon">🎯</span><span>AS4 التسويق</span>
-    </div>
-    <div class="nav-item" onclick="showSection('sharak')">
-      <span class="nav-icon">📅</span><span>خطة شارك 2026</span>
-    </div>
-    <div class="nav-item" onclick="showSection('suggestions')">
-      <span class="nav-icon">💬</span><span>متابعة الاقتراحات</span>
-    </div>
-    <div class="nav-item" onclick="showSection('dailylog')">
-      <span class="nav-icon">📝</span><span>السجل اليومي</span>
-    </div>
-    <div class="nav-item" onclick="showSection('quarterly')">
-      <span class="nav-icon">📈</span><span>التقارير الفصلية</span>
-    </div>
-    <div class="nav-item" onclick="showSection('marketing')">
-      <span class="nav-icon">📣</span><span>خطة التسويق</span>
-    </div>
-    <div class="nav-item" onclick="showSection('monitoring')">
-      <span class="nav-icon">📡</span><span>أدوات الرصد</span>
-    </div>
-    <div class="nav-item" onclick="showSection('councils')">
-      <span class="nav-icon">🤝</span><span>مجالس المتعاملين</span>
-    </div>
-    <div class="nav-item" onclick="showSection('stars7')">
-      <span class="nav-icon">⭐</span><span>ترويج 7 نجوم</span>
-    </div>
+  <nav class="sb-nav">
+    <div class="nav-item active" data-sec="dashboard"><span class="ni">📊</span>لوحة التحكم</div>
+    <div class="nav-item" data-sec="weekly"><span class="ni">📋</span>التقرير الأسبوعي</div>
+    <div class="nav-item" data-sec="dp"><span class="ni">📌</span>معايير DP1-DP11</div>
+    <div class="nav-item" data-sec="as4"><span class="ni">🎯</span>AS4 التسويق</div>
+    <div class="nav-item" data-sec="sharak"><span class="ni">📅</span>خطة شارك 2026</div>
+    <div class="nav-item" data-sec="suggestions"><span class="ni">💬</span>متابعة الاقتراحات</div>
+    <div class="nav-item" data-sec="dailylog"><span class="ni">📝</span>السجل اليومي</div>
+    <div class="nav-item" data-sec="priority"><span class="ni">🌟</span>خدمات ذات الأولوية</div>
+    <div class="nav-item" data-sec="quarterly"><span class="ni">📈</span>التقارير الفصلية</div>
+    <div class="nav-item" data-sec="marketing"><span class="ni">📣</span>خطة التسويق</div>
+    <div class="nav-item" data-sec="monitoring"><span class="ni">📡</span>أدوات الرصد</div>
+    <div class="nav-item" data-sec="councils"><span class="ni">🤝</span>مجالس المتعاملين</div>
+    <div class="nav-item" data-sec="stars7"><span class="ni">⭐</span>ترويج 7 نجوم</div>
   </nav>
-  <div class="sidebar-footer">آخر تحديث: <span id="last-update">2026-04-22</span></div>
+  <div class="sb-foot">آخر حفظ: <span id="last-save">—</span></div>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
-  <div class="topbar">
-    <div>
-      <div class="topbar-title" id="topbar-title">لوحة التحكم</div>
-      <div class="topbar-meta">نظام متابعة المشاركة الرقمية • GCAA • 2026</div>
-    </div>
-    <div class="topbar-actions">
-      <button class="btn btn-outline btn-sm" onclick="exportPDF()">📄 تصدير PDF</button>
-      <button class="btn btn-gold btn-sm" onclick="saveAll()">💾 حفظ</button>
+<div class="topbar">
+  <div><div class="tb-title" id="tb-title">لوحة التحكم</div><div class="tb-meta">GCAA • نظام متابعة المشاركة الرقمية • 2026</div></div>
+  <div class="tb-actions">
+    <button class="btn btn-outline btn-sm" onclick="exportPDF()">📄 PDF</button>
+
+    <button class="btn btn-outline btn-sm" onclick="downloadBackup()" title="تحميل نسخة احتياطية كاملة">📥 نسخة احتياطية</button>
+    <button class="btn btn-gold" onclick="saveAll()">💾 حفظ الكل</button>
+  </div>
+</div>
+<div class="ca">
+
+<!-- DASHBOARD -->
+<div class="section active" id="sec-dashboard">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📊 لوحة التحكم</div><div class="sec-sub">نظرة عامة شاملة على حالة جميع معايير المشاركة الرقمية</div></div>
+    <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+  </div>
+  <div class="ov-card">
+    <div><div class="ov-pct" id="ov-pct">0%</div><div style="font-size:11px;opacity:.85;margin-top:3px">نسبة الإنجاز الكلية</div><div style="font-size:10px;opacity:.6;margin-top:2px" id="ov-sub"></div></div>
+    <div class="ov-mid"><div style="font-size:12px;font-weight:600;opacity:.9">تقدم DP1 - DP11</div><div class="ov-bar-bg"><div class="ov-bar-fill" id="ov-bar" style="width:0%"></div></div><div style="font-size:10px;opacity:.6;margin-top:4px">DGOSI Guidelines 2024 • الوزن 90%</div></div>
+    <div class="ov-nums">
+      <div class="ov-num"><div class="n" id="dv-done">0</div><div class="l">مكتملة</div></div>
+      <div class="ov-num"><div class="n" id="dv-prog" style="color:#85c1e9">0</div><div class="l">جارية</div></div>
+      <div class="ov-num"><div class="n" id="dv-not" style="color:#f1948a">0</div><div class="l">لم تبدأ</div></div>
     </div>
   </div>
-
-  <div class="content-area">
-
-    <!-- ==================== DASHBOARD ==================== -->
-    <div class="section active" id="section-dashboard">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📊 لوحة التحكم</div>
-          <div class="section-subtitle">نظرة عامة شاملة على حالة جميع معايير المشاركة الرقمية</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-
-      <div class="overall-card" id="overall-card">
-        <div>
-          <div class="big-percent" id="overall-pct">9%</div>
-          <div class="label">نسبة الإنجاز الكلية</div>
-          <div style="font-size:12px;opacity:0.7;margin-top:4px;" id="overall-sub">1 مكتمل من أصل 11 معيار</div>
-        </div>
-        <div class="overall-progress-bar">
-          <div style="font-size:13px;font-weight:600;opacity:0.9;">تقدم DP1 - DP11</div>
-          <div class="bar-bg"><div class="bar-fill" id="overall-bar" style="width:9%"></div></div>
-          <div style="font-size:11px;opacity:0.7;margin-top:6px;">المصدر: DGOSI Guidelines 2024 | الوزن الكلي: 90%</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:28px;font-weight:900;color:var(--gold);" id="dash-done">1</div>
-          <div style="font-size:11px;opacity:0.8;">مكتملة</div>
-          <div style="font-size:28px;font-weight:900;color:#85c1e9;margin-top:8px;" id="dash-inprog">1</div>
-          <div style="font-size:11px;opacity:0.8;">قيد التنفيذ</div>
-        </div>
-      </div>
-
-      <div class="stat-grid">
-        <div class="stat-card navy">
-          <div class="stat-label">إجمالي المعايير</div>
-          <div class="stat-value" id="dash-total">11</div>
-          <div class="stat-sub">DP1 حتى DP11</div>
-        </div>
-        <div class="stat-card success">
-          <div class="stat-label">مكتملة</div>
-          <div class="stat-value" id="dash-done2">1</div>
-          <div class="stat-sub">✅ تم الإنجاز</div>
-        </div>
-        <div class="stat-card warning">
-          <div class="stat-label">قيد التنفيذ</div>
-          <div class="stat-value" id="dash-inprog2">1</div>
-          <div class="stat-sub">🔄 جارية</div>
-        </div>
-        <div class="stat-card danger">
-          <div class="stat-label">لم تبدأ</div>
-          <div class="stat-value" id="dash-notstarted">9</div>
-          <div class="stat-sub">⏳ تحتاج متابعة</div>
-        </div>
-        <div class="stat-card gold">
-          <div class="stat-label">إجمالي الاقتراحات</div>
-          <div class="stat-value" id="dash-suggestions">6</div>
-          <div class="stat-sub">من شارك والسوشيال</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-label">أنشطة يومية</div>
-          <div class="stat-value" id="dash-activities">12</div>
-          <div class="stat-sub">مسجلة في السجل</div>
-        </div>
-      </div>
-
-      <div class="progress-section">
-        <div class="progress-section-title">📋 حالة معايير DP1 - DP11</div>
-        <div id="dp-progress-list"></div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div class="progress-section">
-          <div class="progress-section-title">🎯 حالة AS4 - التسويق (10%)</div>
-          <div id="as4-progress-list"></div>
-        </div>
-        <div class="progress-section">
-          <div class="progress-section-title">⭐ ترويج 7 نجوم</div>
-          <div id="stars7-progress-list"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== DP1-DP11 ==================== -->
-    <div class="section" id="section-dp">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📋 معايير المشاركة الرقمية DP1 - DP11</div>
-          <div class="section-subtitle">المصدر: DGOSI Guidelines 2024 | الوزن الكلي: 90% من إطار المشاركة الرقمية</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table" id="dp-table">
-          <thead>
-            <tr>
-              <th>الكود</th>
-              <th>المعيار</th>
-              <th>الوزن</th>
-              <th>الأدلة المطلوبة</th>
-              <th>الحالة</th>
-              <th>الإجراءات المتخذة</th>
-              <th>تاريخ الإنجاز</th>
-              <th>ملاحظات</th>
-            </tr>
-          </thead>
-          <tbody id="dp-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== AS4 ==================== -->
-    <div class="section" id="section-as4">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">🎯 AS4 - استراتيجية التسويق للخدمات الرقمية</div>
-          <div class="section-subtitle">الوزن: 10% | تطوير وتنفيذ استراتيجية تسويقية لتعزيز الوعي بالخدمات الرقمية</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table" id="as4-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>عنصر الخطة التسويقية</th>
-              <th>التفاصيل المطلوبة</th>
-              <th>المحتوى / الإجراء المتخذ</th>
-              <th>الجدول الزمني</th>
-              <th>الحالة</th>
-              <th>ملاحظات</th>
-            </tr>
-          </thead>
-          <tbody id="as4-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== SHARAK ==================== -->
-    <div class="section" id="section-sharak">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📅 خطة المشاركة الرقمية على منصة شارك 2026</div>
-          <div class="section-subtitle">هذه الخطة تخص منصة شارك فقط | حدّث الحالة دورياً</div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button class="btn btn-primary btn-sm" onclick="openModal('sharak')">➕ إضافة نشاط</button>
-          <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>نوع المشاركة</th>
-              <th>عنوان المشاركة</th>
-              <th>الإدارة المعنية</th>
-              <th>القطاع المستهدف</th>
-              <th>الفترة الزمنية</th>
-              <th>المدة</th>
-              <th>حالة المشورة</th>
-              <th>DP المرتبط</th>
-              <th>ملاحظات</th>
-            </tr>
-          </thead>
-          <tbody id="sharak-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== SUGGESTIONS ==================== -->
-    <div class="section" id="section-suggestions">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">💬 متابعة اقتراحات وتعليقات الجمهور</div>
-          <div class="section-subtitle">كل اقتراح أو تعليق يرد من الجمهور عبر شارك أو السوشيال ميديا</div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button class="btn btn-primary btn-sm" onclick="openModal('suggestion')">➕ إضافة اقتراح</button>
-          <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>تاريخ الورود</th>
-              <th>المصدر</th>
-              <th>نص الاقتراح/التعليق</th>
-              <th>الجهة المعنية</th>
-              <th>تاريخ الإحالة</th>
-              <th>حالة المتابعة</th>
-              <th>قرار الجهة</th>
-              <th>تاريخ الإغلاق</th>
-            </tr>
-          </thead>
-          <tbody id="suggestions-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== DAILY LOG ==================== -->
-    <div class="section" id="section-dailylog">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📝 السجل اليومي</div>
-          <div class="section-subtitle">سجل العمل اليومي | الهيئة العامة للطيران المدني | 2026</div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button class="btn btn-primary btn-sm" onclick="openModal('log')">➕ إضافة إدخال</button>
-          <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-        </div>
-      </div>
-      <div class="search-bar">
-        <input type="text" class="search-input" id="log-search" placeholder="🔍 ابحث في السجل..." oninput="filterLog()">
-        <select class="form-control" style="width:180px;padding:8px 12px;" id="log-filter" onchange="filterLog()">
-          <option value="">كل المبادرات</option>
-          <option>🌟 خدمات ذات الأولوية</option>
-          <option>⭐ 7 نجوم</option>
-          <option>📊 DGOSI</option>
-          <option>🤝 شارك</option>
-          <option>📣 أدوات الرصد</option>
-        </select>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>التاريخ</th>
-              <th>اليوم</th>
-              <th>المبادرة</th>
-              <th>نوع النشاط</th>
-              <th>التاسك / الوصف</th>
-              <th>رابط / دليل</th>
-              <th>DP 🤖</th>
-            </tr>
-          </thead>
-          <tbody id="log-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== QUARTERLY ==================== -->
-    <div class="section" id="section-quarterly">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📈 التقارير الفصلية - 2026</div>
-          <div class="section-subtitle">متابعة الأداء ربع السنوي | انقر على الخلايا لتعديلها</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-      <div class="table-wrap q-table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>البند</th>
-              <th>الربع الأول (يناير-مارس)</th>
-              <th>الربع الثاني (أبريل-يونيو)</th>
-              <th>الربع الثالث (يوليو-سبتمبر)</th>
-              <th>الربع الرابع (أكتوبر-ديسمبر)</th>
-            </tr>
-          </thead>
-          <tbody id="quarterly-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== MARKETING ==================== -->
-    <div class="section" id="section-marketing">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📣 خطة التسويق والترويج - حملة "صوتك يصنع الفرق" 2026</div>
-          <div class="section-subtitle">الفترة: أبريل - ديسمبر 2026 | 5 أدوات رصد</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>الربع</th>
-              <th>الشهر/الأسبوع</th>
-              <th>الأداة</th>
-              <th>الرسالة الرئيسية</th>
-              <th>المحتوى / فكرة المنشور</th>
-              <th>نوع المحتوى</th>
-              <th>الحالة</th>
-              <th>رابط/دليل</th>
-            </tr>
-          </thead>
-          <tbody id="marketing-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== MONITORING ==================== -->
-    <div class="section" id="section-monitoring">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">📡 أدوات الرصد - حملة "صوتك يصنع الفرق"</div>
-          <div class="section-subtitle">الأدوات الخمس: تواصل 171 | المتسوق السري | نبض المتعامل | مجالس المتعاملين | مرصد الخدمات</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>الربع/الشهر</th>
-              <th>الأسبوع</th>
-              <th>الأداة</th>
-              <th>نوع المحتوى</th>
-              <th>الرسالة الرئيسية</th>
-              <th>فكرة المنشور</th>
-              <th>الحالة</th>
-              <th>رابط</th>
-            </tr>
-          </thead>
-          <tbody id="monitoring-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== COUNCILS ==================== -->
-    <div class="section" id="section-councils">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">🤝 مجالس المتعاملين</div>
-          <div class="section-subtitle">سجل التصاميم والمنشورات والتقارير | المحتوى يأتي من قسم تجربة المتعاملين</div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button class="btn btn-primary btn-sm" onclick="openModal('council')">➕ إضافة</button>
-          <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>التاريخ</th>
-              <th>نوع العمل</th>
-              <th>عنوان/وصف التصميم</th>
-              <th>الجهة الطالبة</th>
-              <th>الحالة</th>
-              <th>رابط/دليل</th>
-              <th>ملاحظات</th>
-            </tr>
-          </thead>
-          <tbody id="councils-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== 7 STARS ==================== -->
-    <div class="section" id="section-stars7">
-      <div class="section-header">
-        <div class="section-title-block">
-          <div class="section-title">⭐ ترويج نظام النجوم العالمي لتصنيف الخدمات GSR 2026</div>
-          <div class="section-subtitle">حملة: نظام النجوم | أبريل 2026</div>
-        </div>
-        <button class="btn btn-gold" onclick="exportPDF()">📄 تصدير PDF</button>
-      </div>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>تاريخ النشر</th>
-              <th>نوع البوست</th>
-              <th>محتوى المنشور</th>
-              <th>الهاشتاقات</th>
-              <th>الحالة</th>
-              <th>رابط المنشور</th>
-              <th>ملاحظات</th>
-            </tr>
-          </thead>
-          <tbody id="stars7-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-  </div><!-- /content-area -->
-</div><!-- /main -->
-
-<!-- MODALS -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-title" id="modal-title">إضافة</div>
-    <div id="modal-body"></div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" id="modal-save-btn" onclick="saveModal()">💾 حفظ</button>
-      <button class="btn btn-outline" onclick="document.getElementById('modal-overlay').classList.remove('open')">إلغاء</button>
+  <div class="stat-grid">
+    <div class="stat-card c-navy"><div class="sl">إجمالي المعايير</div><div class="sv">11</div><div class="ss">DP1-DP11</div></div>
+    <div class="stat-card c-green"><div class="sl">مكتملة</div><div class="sv" id="dv-done2">0</div><div class="ss">✅</div></div>
+    <div class="stat-card c-orange"><div class="sl">قيد التنفيذ</div><div class="sv" id="dv-prog2">0</div><div class="ss">🔄</div></div>
+    <div class="stat-card c-red"><div class="sl">لم تبدأ</div><div class="sv" id="dv-not2">0</div><div class="ss">⏳</div></div>
+    <div class="stat-card c-gold"><div class="sl">الاقتراحات</div><div class="sv" id="dv-sug">0</div><div class="ss">من شارك</div></div>
+    <div class="stat-card c-blue"><div class="sl">أنشطة يومية</div><div class="sv" id="dv-log">0</div><div class="ss">مسجلة</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="prog-sec"><div class="prog-sec-title">📌 DP1-DP11 التقدم</div><div id="dp-prog"></div></div>
+    <div>
+      <div class="prog-sec" style="margin-bottom:14px"><div class="prog-sec-title">🎯 AS4 التسويق</div><div id="as4-prog"></div></div>
+      <div class="prog-sec"><div class="prog-sec-title">⭐ ترويج 7 نجوم</div><div id="s7-prog"></div></div>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- WEEKLY REPORT -->
+<div class="section" id="sec-weekly">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📋 التقرير الأسبوعي</div><div class="sec-sub">تقرير أسبوعي لإرساله للمدير - يتجدد تلقائياً كل أسبوع</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-primary btn-sm" onclick="saveWeeklyReport()">💾 حفظ التقرير</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 تصدير للمدير</button>
+    </div>
+  </div>
+  <div class="wr-header">
+    <div>
+      <div style="font-size:18px;font-weight:800">تقرير الأداء الأسبوعي</div>
+      <div style="font-size:12px;opacity:.8;margin-top:2px">الهيئة العامة للطيران المدني • قسم المشاركة الرقمية</div>
+      <div class="wr-date" id="wr-dates">الأسبوع: —</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:32px;font-weight:900;color:var(--gold)" id="wr-done-count">0</div>
+      <div style="font-size:11px;opacity:.8">إنجاز هذا الأسبوع</div>
+    </div>
+  </div>
+  <!-- This week accomplishments -->
+  <div class="wr-block">
+    <div class="wr-block-title">✅ ما تم إنجازه هذا الأسبوع <span style="font-size:11px;color:var(--muted);font-weight:400">(يُملأ تلقائياً من السجل اليومي + يمكن التعديل)</span></div>
+    <div id="wr-done-list"></div>
+    <div class="wr-add-row">
+      <input class="wr-input" id="wr-done-input" placeholder="أضف إنجازاً يدوياً..." onkeydown="if(event.key==='Enter')addWRItem('done')">
+      <button class="btn btn-green btn-sm" onclick="addWRItem('done')">➕ إضافة</button>
+    </div>
+  </div>
+  <!-- Next week plans -->
+  <div class="wr-block">
+    <div class="wr-block-title">📅 خطة الأسبوع القادم</div>
+    <div id="wr-next-list"></div>
+    <div class="wr-add-row">
+      <input class="wr-input" id="wr-next-input" placeholder="أضف مهمة للأسبوع القادم..." onkeydown="if(event.key==='Enter')addWRItem('next')">
+      <button class="btn btn-primary btn-sm" onclick="addWRItem('next')">➕ إضافة</button>
+    </div>
+  </div>
+  <!-- Challenges -->
+  <div class="wr-block">
+    <div class="wr-block-title">⚠️ التحديات والملاحظات</div>
+    <textarea class="fc" id="wr-challenges" rows="3" placeholder="أي تحديات واجهتك هذا الأسبوع أو ملاحظات مهمة..." onblur="saveWRField()"></textarea>
+  </div>
+  <!-- DP Progress summary -->
+  <div class="wr-block">
+    <div class="wr-block-title">📊 ملخص حالة المعايير DP</div>
+    <div id="wr-dp-summary"></div>
+  </div>
+  <!-- Past reports -->
+  <div class="wr-block">
+    <div class="wr-block-title">📚 سجل التقارير السابقة</div>
+    <div id="wr-history"></div>
+  </div>
+</div>
+
+<!-- DP -->
+<div class="section" id="sec-dp">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📌 معايير المشاركة الرقمية DP1-DP11</div><div class="sec-sub">DGOSI Guidelines 2024 • الوزن 90% • انقر على أي خلية لتعديلها • اسحب ⠿ لإعادة الترتيب</div></div>
+    <div class="sec-hdr-btns"><button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button></div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>الكود</th><th>المعيار</th><th>الوزن</th><th>الأدلة المطلوبة</th><th>الحالة</th><th>الإجراءات المتخذة</th><th>تاريخ الإنجاز</th><th>ملاحظات</th><th>✕</th></tr></thead>
+    <tbody id="dp-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('dp')">➕ إضافة معيار</div></div>
+</div>
+
+<!-- AS4 -->
+<div class="section" id="sec-as4">
+  <div class="sec-hdr">
+    <div><div class="sec-title">🎯 AS4 - استراتيجية التسويق للخدمات الرقمية</div><div class="sec-sub">الوزن: 10% • انقر للتعديل • اسحب ⠿ لإعادة الترتيب</div></div>
+    <div class="sec-hdr-btns"><button class="btn btn-primary btn-sm" onclick="addRow('as4')">➕ إضافة</button><button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button></div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>#</th><th>عنصر الخطة</th><th>التفاصيل</th><th>المحتوى / الإجراء</th><th>الجدول الزمني</th><th>الحالة</th><th>ملاحظات</th><th>✕</th></tr></thead>
+    <tbody id="as4-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('as4')">➕ إضافة عنصر</div></div>
+</div>
+
+<!-- SHARAK -->
+<div class="section" id="sec-sharak">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📅 خطة المشاركة الرقمية - منصة شارك 2026</div><div class="sec-sub">19 نشاط • انقر للتعديل • اسحب لإعادة الترتيب</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-outline btn-sm" onclick="sortByField('sharak','period')">🔃 ترتيب بالفترة</button>
+      <button class="btn btn-primary btn-sm" onclick="addRow('sharak')">➕ إضافة</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+    </div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>#</th><th>نوع المشاركة</th><th>عنوان المشاركة</th><th>الإدارة المعنية</th><th>الفترة الزمنية</th><th>المدة</th><th>الحالة</th><th>DP</th><th>رابط شارك</th><th>رابط السوشيال</th><th>ملاحظات</th><th>✕</th></tr></thead>
+    <tbody id="sharak-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('sharak')">➕ إضافة نشاط</div></div>
+</div>
+
+<!-- SUGGESTIONS -->
+<div class="section" id="sec-suggestions">
+  <div class="sec-hdr">
+    <div><div class="sec-title">💬 متابعة اقتراحات وتعليقات الجمهور</div><div class="sec-sub">انقر للتعديل • اسحب لإعادة الترتيب</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-outline btn-sm" onclick="sortByField('suggestions','date')">🔃 ترتيب بالتاريخ</button>
+      <button class="btn btn-primary btn-sm" onclick="addRow('suggestions')">➕ إضافة</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+    </div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>#</th><th>تاريخ الورود</th><th>نوع المشاركة</th><th>عنوان المشاركة (على شارك)</th><th>نص الاقتراح/التعليق</th><th>الجهة المعنية</th><th>تاريخ الإحالة</th><th>حالة المتابعة</th><th>قرار الجهة</th><th>تاريخ الإغلاق</th><th>✕</th></tr></thead>
+    <tbody id="sug-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('suggestions')">➕ إضافة اقتراح</div></div>
+</div>
+
+<!-- DAILY LOG -->
+<div class="section" id="sec-dailylog">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📝 السجل اليومي</div><div class="sec-sub">انقر للتعديل • اسحب لإعادة الترتيب</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-outline btn-sm" onclick="sortByField('dailyLog','date')">🔃 ترتيب بالتاريخ</button>
+      <button class="btn btn-primary btn-sm" onclick="addRow('dailylog')">➕ إضافة</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+    </div>
+  </div>
+  <div class="search-row">
+    <input type="text" class="si-input" id="log-search" placeholder="🔍 بحث..." oninput="renderLog()">
+    <select class="fc" style="width:160px;padding:6px 10px" id="log-filter" onchange="renderLog()">
+      <option value="">كل المبادرات</option>
+      <option>🌟 خدمات ذات الأولوية</option><option>⭐ 7 نجوم</option><option>📊 DGOSI</option><option>🤝 شارك</option><option>📣 أدوات الرصد</option>
+    </select>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>التاريخ <button class="sort-btn" onclick="sortByField('dailyLog','date')">↕</button></th><th>اليوم</th><th>المبادرة</th><th>نوع النشاط</th><th>التاسك / الوصف</th><th>رابط / دليل</th><th>DP</th><th>✕</th></tr></thead>
+    <tbody id="log-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('dailylog')">➕ إضافة إدخال</div></div>
+</div>
+
+<!-- PRIORITY SERVICES -->
+<div class="section" id="sec-priority">
+  <div class="sec-hdr">
+    <div><div class="sec-title">🌟 خدمات ذات الأولوية</div><div class="sec-sub">تتبع ترويج الخدمات الحكومية ذات الأولوية على السوشيال ميديا</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-outline btn-sm" onclick="sortByField('priority','date')">🔃 ترتيب بالتاريخ</button>
+      <button class="btn btn-primary btn-sm" onclick="addRow('priority')">➕ إضافة</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+    </div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>#</th><th>التاريخ</th><th>اسم الخدمة</th><th>نوع الخدمة</th><th>نوع المنشور</th><th>المنصة</th><th>الوصف / الرسالة</th><th>الحالة</th><th>رابط المنشور</th><th>ملاحظات</th><th>✕</th></tr></thead>
+    <tbody id="pri-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('priority')">➕ إضافة خدمة</div></div>
+</div>
+
+
+<!-- QUARTERLY -->
+<div class="section" id="sec-quarterly">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📈 التقارير الفصلية 2026</div><div class="sec-sub">انقر على أي خلية لتعديلها</div></div>
+    <div class="sec-hdr-btns"><button class="btn btn-primary btn-sm" onclick="addRow('quarterly')">➕ إضافة بند</button><button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button></div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>البند</th><th>الربع الأول (يناير-مارس)</th><th>الربع الثاني (أبريل-يونيو)</th><th>الربع الثالث (يوليو-سبتمبر)</th><th>الربع الرابع (أكتوبر-ديسمبر)</th><th>✕</th></tr></thead>
+    <tbody id="qtr-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('quarterly')">➕ إضافة بند</div></div>
+</div>
+
+<!-- MARKETING -->
+<div class="section" id="sec-marketing">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📣 خطة التسويق والترويج - "صوتك يصنع الفرق" 2026</div><div class="sec-sub">أبريل - ديسمبر 2026 • 17 نشاط ترويجي</div></div>
+    <div class="sec-hdr-btns"><button class="btn btn-primary btn-sm" onclick="addRow('marketing')">➕ إضافة</button><button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button></div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>الربع</th><th>الشهر/الأسبوع</th><th>الأداة</th><th>الرسالة الرئيسية</th><th>المحتوى</th><th>النوع</th><th>الحالة</th><th>رابط/دليل</th><th>✕</th></tr></thead>
+    <tbody id="mkt-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('marketing')">➕ إضافة نشاط</div></div>
+</div>
+
+<!-- MONITORING -->
+<div class="section" id="sec-monitoring">
+  <div class="sec-hdr">
+    <div><div class="sec-title">📡 أدوات الرصد - "صوتك يصنع الفرق"</div><div class="sec-sub">الأدوات الخمس</div></div>
+    <div class="sec-hdr-btns"><button class="btn btn-primary btn-sm" onclick="addRow('monitoring')">➕ إضافة</button><button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button></div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>الربع/الشهر</th><th>الأسبوع</th><th>الأداة</th><th>نوع المحتوى</th><th>الرسالة</th><th>فكرة المنشور</th><th>الحالة</th><th>رابط</th><th>✕</th></tr></thead>
+    <tbody id="mon-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('monitoring')">➕ إضافة نشاط</div></div>
+</div>
+
+<!-- COUNCILS -->
+<div class="section" id="sec-councils">
+  <div class="sec-hdr">
+    <div><div class="sec-title">🤝 مجالس المتعاملين</div><div class="sec-sub">سجل التصاميم والمنشورات</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-outline btn-sm" onclick="sortByField('councils','date')">🔃 ترتيب بالتاريخ</button>
+      <button class="btn btn-primary btn-sm" onclick="addRow('councils')">➕ إضافة</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+    </div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>#</th><th>التاريخ</th><th>نوع العمل</th><th>عنوان/وصف التصميم</th><th>الجهة الطالبة</th><th>الحالة</th><th>رابط/دليل</th><th>ملاحظات</th><th>✕</th></tr></thead>
+    <tbody id="cou-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('councils')">➕ إضافة</div></div>
+</div>
+
+<!-- STARS 7 -->
+<div class="section" id="sec-stars7">
+  <div class="sec-hdr">
+    <div><div class="sec-title">⭐ ترويج نظام النجوم العالمي GSR 2026</div><div class="sec-sub">انقر على أي خلية لتعديلها مباشرة • حقل الرابط قابل للكتابة</div></div>
+    <div class="sec-hdr-btns">
+      <button class="btn btn-outline btn-sm" onclick="sortByField('stars7','date')">🔃 ترتيب بالتاريخ</button>
+      <button class="btn btn-primary btn-sm" onclick="addRow('stars7')">➕ إضافة منشور</button>
+      <button class="btn btn-gold btn-sm" onclick="exportPDF()">📄 PDF</button>
+    </div>
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr><th style="width:30px"></th><th>#</th><th>تاريخ النشر <button class="sort-btn" onclick="sortByField('stars7','date')">↕</button></th><th>نوع البوست</th><th>محتوى المنشور</th><th>الهاشتاقات</th><th>الحالة</th><th>رابط المنشور</th><th>ملاحظات</th><th>✕</th></tr></thead>
+    <tbody id="s7-body"></tbody>
+  </table><div class="add-row-btn" onclick="addRow('stars7')">➕ إضافة منشور جديد</div></div>
+</div>
+
+</div></div><!-- /ca /main -->
+
+<!-- MODAL -->
+<div class="mo" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="mo-box">
+    <div class="mo-title" id="mo-title">تأكيد</div>
+    <div id="mo-body"></div>
+    <div class="mo-acts">
+      <button class="btn btn-danger" id="mo-ok" onclick="modalOK()">تأكيد</button>
+      <button class="btn btn-outline" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
+<!-- QUOTE WIDGET -->
+<div class="qw" id="qw">
+  <div class="qw-label">💡 اقتباس تحفيزي</div>
+  <div class="qw-text" id="qw-text">...</div>
+  <div class="qw-author" id="qw-author"></div>
+  <div class="qw-foot">
+    <button class="qw-btn" onclick="nextQuote()">↻ اقتباس جديد</button>
+    <button class="qw-hide" onclick="document.getElementById('qw').style.display='none'" title="إخفاء">✕</button>
+  </div>
+</div>
+
+<!-- AUDIO PANEL -->
 <script>
-// ==================== DATA ====================
-const STATUS_OPTIONS_DP = ['⏳ لم تبدأ', '🔄 قيد التنفيذ', '✅ مكتمل'];
-const STATUS_OPTIONS_SHARAK = ['مغلق', 'حالية', 'مستقبلية'];
-const STATUS_OPTIONS_SUGGEST = ['جديد', '🔄 قيد المتابعة', '✅ مغلق', '⏳ بانتظار الرد'];
-const STATUS_OPTIONS_COUNCIL = ['✅ تم النشر', '🔄 بانتظار الاعتماد', '⏳ قيد التصميم', '❌ ملغى'];
-const STATUS_OPTIONS_STARS = ['✅ تم النشر', '🔜 جاهز - لم ينشر بعد', '⏳ لم تبدأ', '🔄 قيد التنفيذ'];
+const S_DP=['⏳ لم تبدأ','🔄 قيد التنفيذ','✅ مكتمل'];
+const S_SHAR=['مستقبلية','حالية','مغلق'];
+const S_SUG=['جديد','🔄 قيد المتابعة','✅ مغلق','⏳ بانتظار الرد'];
+const S_COU=['⏳ قيد التصميم','🔄 بانتظار الاعتماد','✅ تم النشر','❌ ملغى'];
+const S_S7=['⏳ لم تبدأ','🔄 قيد التنفيذ','🔜 جاهز - لم ينشر','✅ تم النشر'];
 
-const defaultData = {
-  dp: [
-    { code:'DP1', name:'نشر سياسة المشاركة الرقمية على الموقع المؤسسي ضمن قسم المشاركة الرقمية وتتماشى مع التوجهات الوطنية', weight:'10%', evidence:'• رابط صفحة سياسة المشاركة الرقمية على موقع الجهة\n• تشمل السياسة: الأهداف والنطاق، أصحاب المصلحة، المبادئ التوجيهية، آليات الرد والتقييم، وترويج فرص المشاركة', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP2', name:'نشر فرص المشاركة الرقمية على الموقع الرسمي وعلى شارك وفق معايير الجودة', weight:'10%', evidence:'• قائمة بجميع المشاركات الرقمية مع روابطها على شارك\n• 3 مشورات مغلقة + 3 حالية/مستقبلية\n• 4 مدونات كحد أدنى\n• 4 استطلاعات رأي\n• موضوعان في المنتدى', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP3', name:'نشر المشورات المستقبلية للعام الحالي والمقبل لإشراك الجمهور في تطوير الاستراتيجيات والسياسات', weight:'10%', evidence:'• ملف الخطة المعتمدة\n• قائمة المشورات المخطط لها للعام الحالي والمقبل\n• صور شاشة من المنشورات على شارك', status:'✅ مكتمل', actions:'• تم إعداد خطة المشاركة الرقمية 2026-2027 ومراجعتها مع مصعب الحوسني\n• تم تسليمها لـ TDRA عبر عايشة الغساني\n• تم حفظ إيميل التسليم كدليل', date:'2026-04-22', notes:'الخطة تحتوي 19 نشاط موزعة على أرباع 2026 | مراجعة مصعب الحوسني = اعتماد داخلي | إيميل عايشة الغساني = إثبات التسليم لـ TDRA' },
-    { code:'DP4', name:'نشر معلومات حول مشورات العام الماضي لإشراك الجمهور في تطوير الاستراتيجيات والسياسات على شارك', weight:'10%', evidence:'• تقرير عن المشورات مع عرض النتائج\n• لا تقل عن 3 مشورات سابقة\n• النتائج تحتوي: عدد المشاركين، التعليقات، القرار المتخذ، الخطوات القادمة', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP5', name:'نشر ملخص لتعليقات العامة المستلمة واستجابتنا لكل فرصة مشاركة رقمية في العام الماضي', weight:'10%', evidence:'• قائمة الموضوعات وفرص المشاركة على شارك\n• 3 مدخلات عامة مهمة على الأقل لكل نوع\n• الإجراءات المتخذة استجابة لهذه المشاركات', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP6', name:'نشر أدلة على تضمين آراء الناس في عملية صنع قرار فعلية (كبار السن، أصحاب الهمم، النساء، الشباب)', weight:'10%', evidence:'• صورة للمشورات السابقة\n• عرض النتائج على شارك: الفئات، عدد المشاركين، النقاط الرئيسية، القرارات\n• مشورة واحدة على الأقل', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP7', name:'نشر معلومات حول مشاركة الجمهور في الإنشاء المشترك في تصميم وتطوير الخدمات/السياسات على شارك', weight:'10%', evidence:'• تقرير مشاركة الجمهور في الإنشاء المشترك\n• قائمة الموضوعات، التواريخ، عدد المشاركين\n• النقاط الرئيسية وخطة العمل مع مواد مرئية', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP8', name:'الترويج لفرص المشاركة الرقمية عبر حسابات السوشيال ميديا والبريد الإلكتروني', weight:'5%', evidence:'• نماذج من المنشورات على السوشيال ميديا\n• لقطات شاشة من البريد الإلكتروني\n• عدد المتابعين والتفاعل', status:'🔄 قيد التنفيذ', actions:'• بوست إنستغرام: إصدار رخصة مهندس صيانة الطائرات (7 أبريل 2026) - 151 لايك\n• بوست إنستغرام: تجديد شهادة اللياقة الطبية (1 أبريل 2026)', date:'2026-04-22', notes:'مستمر على مدار العام' },
-    { code:'DP9', name:'جمع وتحليل الأفكار والمقترحات الواردة من الجمهور عبر القنوات الرقمية وشارك', weight:'10%', evidence:'• قائمة المقترحات الواردة مع تحليلها\n• الإجراءات المتخذة استجابة لها\n• تقرير يبين كيفية الاستفادة من المقترحات', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP10', name:'نشر نتائج المشاركات الرقمية خلال العام الماضي على شارك مع عدد الردود من الجمهور', weight:'10%', evidence:'• تقرير عن نتائج المشاركة الرقمية\n• صور شاشة من شارك\n• بيانات تحليلية: عدد المشاركين، التعليقات، معدل التفاعل', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' },
-    { code:'DP11', name:'إجراء تدريب داخلي واتصالات مع القادة والموظفين للتثقيف والتشجيع بشأن المشاركة الرقمية', weight:'5%', evidence:'• جدول التدريبات المنفذة\n• مواد التدريب والمراسلات الداخلية\n• قائمة المشاركين في التدريبات', status:'⏳ لم تبدأ', actions:'', date:'', notes:'' }
-  ],
-  as4: [
-    { name:'الاستراتيجية والأهداف', details:'تحديد الهدف الرئيسي من الاستراتيجية التسويقية وكيفية قياس النجاح', content:'', timeline:'', status:'⏳ لم تبدأ', notes:'' },
-    { name:'الجمهور المستهدف', details:'تحديد الفئات المستهدفة: المتعاملين، الطيارين، شركات الطيران، العموم', content:'', timeline:'', status:'⏳ لم تبدأ', notes:'' },
-    { name:'القنوات الترويجية', details:'تحديد القنوات: السوشيال ميديا، البريد الإلكتروني، الموقع الرسمي، الفعاليات', content:'', timeline:'', status:'⏳ لم تبدأ', notes:'' },
-    { name:'عوامل النجاح والمقاييس (KPIs)', details:'تحديد مؤشرات الأداء: عدد المتابعين، نسبة التفاعل، عدد زيارات الموقع، معدل التحويل', content:'', timeline:'', status:'⏳ لم تبدأ', notes:'' },
-    { name:'الجدول الزمني للأنشطة الرئيسية', details:'جدول الأنشطة الترويجية خلال 2026 موزعة على الأرباع الأربعة', content:'', timeline:'', status:'⏳ لم تبدأ', notes:'' },
-    { name:'خطة الطوارئ', details:'استراتيجيات التسويق الطارئة وزيادة الوعي بالقنوات الرقمية وطرق التواصل البديلة', content:'', timeline:'', status:'⏳ لم تبدأ', notes:'' },
-    { name:'أمثلة الترويج (2026)', details:'توفير أمثلة فعلية على الترويج الذي تم خلال العام مع الروابط أو الصور', content:'• بوست إنستغرام: إصدار رخصة مهندس صيانة الطائرات - 7 أبريل 2026\n• بوست إنستغرام: تجديد شهادة اللياقة الطبية - 1 أبريل 2026', timeline:'أبريل 2026 - جارٍ', status:'🔄 قيد التنفيذ', notes:'' }
-  ],
-  sharak: [
-    { type:'منتدى نقاش', title:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟', dept:'الموارد البشرية / الاتصال المؤسسي', sector:'بنية تحتية / نقل / عام', period:'الربع الأول 2026', duration:'شهر', status:'مغلق', dp:'DP4, DP5', notes:'' },
-    { type:'استطلاع رأي', title:'ما هي المنصة المفضلة لديكم لمتابعة أخبار ومستجدات الهيئة؟', dept:'الاتصال المؤسسي', sector:'بنية تحتية / نقل / عام', period:'الربع الأول حتى الرابع 2026', duration:'سنة', status:'حالية', dp:'DP2, DP8', notes:'' },
-    { type:'منتدى نقاش', title:'كيف ترون كفاءة استجابة الهيئة في ضمان استمرارية العمليات في مختلف الظروف؟', dept:'الاتصال المؤسسي', sector:'بنية تحتية / نقل / عام', period:'الربع الثاني 2026', duration:'شهر', status:'حالية', dp:'DP3, DP6', notes:'' },
-    { type:'استطلاع رأي', title:'مبادرة نحب سماءنا: أي المنصات الأنسب للوصول إلى أكبر شريحة من الجمهور؟', dept:'الاتصال المؤسسي', sector:'بنية تحتية / نقل / عام', period:'الربع الثاني 2026', duration:'شهر', status:'مستقبلية', dp:'DP2, DP8', notes:'' },
-    { type:'مشورة', title:'ما رأيك بمدى وضوح البيانات الإعلامية والتحديثات الصادرة من الهيئة خلال فترة الأزمة؟', dept:'الاتصال المؤسسي', sector:'بنية تحتية / نقل / عام', period:'الربع الثاني 2026', duration:'شهر', status:'مستقبلية', dp:'DP3, DP6', notes:'' },
-    { type:'مشورة', title:'استبيان رأي الجمهور في حملة "نحب سماءنا"', dept:'تجربة المتعاملين / التراخيص / السلامة', sector:'بنية تحتية / نقل / عام', period:'الربع الثاني 2026', duration:'شهر', status:'مستقبلية', dp:'DP5, DP6', notes:'' },
-    { type:'استطلاع رأي', title:'ما مدى استفادة الجمهور والطلاب من خاصية الذكاء الاصطناعي في البيانات المفتوحة؟', dept:'قسم الدراسات والأبحاث', sector:'بنية تحتية / نقل / عام', period:'الربع الثاني 2026', duration:'شهر', status:'مستقبلية', dp:'DP2, DP9', notes:'' }
-  ],
-  suggestions: [
-    { date:'19 فبراير 2026', source:'شارك', text:"Actual conversation with HR's - طلب إجراء محادثة فعلية مع فريق الموارد البشرية", dept:'الموارد البشرية', referral:'', status:'جديد', decision:'', closed:'' },
-    { date:'19 فبراير 2026', source:'شارك', text:'It was a very positive and well-organized experience - تجربة إيجابية ومنظمة جداً في معرض مستقبل واعد', dept:'الاتصال المؤسسي', referral:'', status:'جديد', decision:'ملاحظة إيجابية عن المعرض', closed:'' },
-    { date:'19 فبراير 2026', source:'شارك', text:'أقترح أن يتم توفير خيار تقديم سير ذاتية إلكترونياً لجميع الراغبين في العمل بقطاع الطيران', dept:'الموارد البشرية', referral:'', status:'جديد', decision:'', closed:'' },
-    { date:'19 فبراير 2026', source:'شارك', text:'Customer service - اقتراح تحسين خدمة العملاء', dept:'قسم تجربة المتعاملين', referral:'', status:'جديد', decision:'', closed:'' },
-    { date:'19 فبراير 2026', source:'شارك', text:'Humanizing the Hiring Process - اقتراح بإضفاء الطابع الإنساني على عملية التوظيف', dept:'الموارد البشرية', referral:'', status:'جديد', decision:'', closed:'' },
-    { date:'19 فبراير 2026', source:'شارك', text:'Learned about required qualifications, certifications, and training pathways - طلب معلومات عن المؤهلات والشهادات والمسارات التدريبية', dept:'قطاع السلامة / ANS Training', referral:'', status:'جديد', decision:'', closed:'' }
-  ],
-  dailyLog: [
-    { date:'01/04/2026', day:'الأربعاء', initiative:'🌟 خدمات ذات الأولوية', type:'📱 نشر بوست', task:'بوست تجديد شهادة اللياقة الطبية', link:'https://www.instagram.com/p/DW1g54bCHQI/', dp:'' },
-    { date:'07/04/2026', day:'الثلاثاء', initiative:'🌟 خدمات ذات الأولوية', type:'📱 نشر بوست', task:'بوست إصدار رخصة مهندس صيانة الطائرات', link:'https://www.instagram.com/p/DWlUiPeiFFL/', dp:'' },
-    { date:'12/04/2026', day:'السبت', initiative:'⭐ 7 نجوم', type:'📱 نشر بوست', task:'بوست 1 - تعريفي - ما هو نظام النجوم العالمي', link:'https://www.instagram.com/p/DWjkgViiMnN/', dp:'' },
-    { date:'14/04/2026', day:'الاثنين', initiative:'⭐ 7 نجوم', type:'📱 نشر بوست', task:'بوست 2 - ماذا تعني تجربة 7 نجوم؟', link:'https://www.instagram.com/p/DXLkekyiJg6/', dp:'' },
-    { date:'16/04/2026', day:'الأربعاء', initiative:'⭐ 7 نجوم', type:'📱 نشر بوست', task:'بوست 3 - كيف يتم التقييم؟', link:'https://www.instagram.com/p/DXZd1V7iFhR/', dp:'' },
-    { date:'22/04/2026', day:'الأربعاء', initiative:'📊 DGOSI', type:'📋 جمع دليل', task:'تسليم خطة المشاركة الرقمية 2026 لـ TDRA عبر عايشة الغساني', link:'DP3_خطة_شارك_2026_إرسال_TDRA.pdf', dp:'DP3' },
-    { date:'22/04/2026', day:'الأربعاء', initiative:'🤝 شارك', type:'💬 متابعة اقتراح', task:'جمع 6 اقتراحات من منتدى مستقبل واعد وتسجيلها في الملف', link:'', dp:'DP9' },
-    { date:'23/04/2026', day:'الأربعاء', initiative:'📣 أدوات الرصد', type:'✅ مهمة أنجزت', task:'تصميم عرض 3rd Customer Council Presentation - تحضير للورشة', link:'', dp:'' },
-    { date:'23/04/2026', day:'الأربعاء', initiative:'⭐ 7 نجوم', type:'✅ مهمة أنجزت', task:'تصميم تعميم Global Star Rating Assessment ونشره داخلياً', link:'', dp:'' },
-    { date:'24/04/2026', day:'الخميس', initiative:'⭐ 7 نجوم', type:'📱 نشر بوست', task:'نشر بوست 4 - رحلة تطوير مستمرة 🚀', link:'https://www.instagram.com/gcaauae/p/DXjmyulCFek/', dp:'' },
-    { date:'24/04/2026', day:'الخميس', initiative:'⭐ 7 نجوم', type:'✅ مهمة أنجزت', task:'تصميم خلفية سطح المكتب - Global Star Rating Assessment', link:'', dp:'' },
-    { date:'27/04/2026', day:'الأحد', initiative:'🌟 خدمات ذات الأولوية', type:'📧 إيميل مهم', task:'إرسال تصميم للاعتماد - بوست إطلاق خدمة إصدار بطاقة طاقم الطائرة بالذكاء الاصطناعي', link:'', dp:'' }
-  ],
-  quarterly: [
-    { item:'المشاركات الرقمية المنفذة (عدد)', q1:'', q2:'', q3:'', q4:'' },
-    { item:'المشورات المفتوحة', q1:'', q2:'', q3:'', q4:'' },
-    { item:'المشورات المغلقة', q1:'1', q2:'', q3:'', q4:'' },
-    { item:'عدد المدونات المنشورة', q1:'', q2:'', q3:'', q4:'' },
-    { item:'عدد الاستطلاعات', q1:'', q2:'', q3:'', q4:'' },
-    { item:'إجمالي المشاركين', q1:'', q2:'', q3:'', q4:'' },
-    { item:'إجمالي التعليقات', q1:'6', q2:'', q3:'', q4:'' },
-    { item:'عدد منشورات السوشيال ميديا', q1:'', q2:'', q3:'', q4:'' },
-    { item:'مجالس المتعاملين المنعقدة', q1:'', q2:'', q3:'', q4:'' },
-    { item:'عدد التدريبات الداخلية', q1:'', q2:'', q3:'', q4:'' }
-  ],
-  marketing: [
-    { quarter:'الربع الثاني', period:'أبريل - أسبوع 4', tool:'تواصل 171', message:'استجابة مسؤولة… وصوت مسموع', content:'بوست تعريفي: التعريف بدور مركز تواصل 171 كقناة مباشرة لاستقبال الملاحظات والشكاوى', type:'بوست', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'', period:'مايو - أسبوع 1', tool:'المتسوق السري', message:'تقييم حقيقي من قلب التجربة', content:'بوست تعريفي: عين التطوير التي لا تُرى - التعريف بدور المتسوق السري', type:'بوست', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'', period:'مايو - أسبوع 2', tool:'نبض المتعامل', message:'رأيك يصنع الخدمة الأفضل', content:'بوست تعريفي: نبض المتعامل ❤️ - أهمية استبيانات رضا المتعاملين', type:'بوست', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'', period:'مايو - أسبوع 3', tool:'مجالس المتعاملين', message:'شراكة حقيقية في صناعة القرار', content:'بوست تعريفي: مجالس المتعاملين - تعزيز مفهوم المشاركة المجتمعية', type:'بوست', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'', period:'مايو - أسبوع 4', tool:'مرصد الخدمات', message:'بيانات دقيقة… قرارات أفضل', content:'بوست تعريفي: مرصد الخدمات الحكومية 📊 - دور المرصد في متابعة الأداء', type:'بوست', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'', period:'يونيو - أسبوع 1', tool:'جميع الأدوات', message:'رحلة الملاحظة من المتعامل إلى القرار', content:'فيديو قصير: رحلة تطوير الخدمة من استقبال الملاحظة حتى تنفيذ التحسين', type:'فيديو/ريلز', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'', period:'يونيو - أسبوع 2', tool:'جميع الأدوات', message:'الأدوات الخمس في تصميم واحد', content:'إنفوجرافيك: توضيح العلاقة بين الأدوات الخمس ودورها في تحسين الخدمات', type:'إنفوجرافيك', status:'⏳ لم تبدأ', link:'' },
-    { quarter:'الربع الثالث', period:'يوليو - أسبوع 1', tool:'تواصل 171', message:'قصة نجاح: كيف ساهم صوتك في التغيير؟', content:'قصة نجاح: حالة حقيقية لشكوى أو ملاحظة أُحيلت وأسفرت عن تحسين فعلي', type:'بوست قصة نجاح', status:'⏳ لم تبدأ', link:'' }
-  ],
-  monitoring: [
-    { period:'الربع الثاني\nأبريل', week:'الأسبوع الرابع', tool:'تواصل 171', type:'بوست تعريفي', message:'استجابة مسؤولة… وصوت مسموع', content:'171… لأن صوتك مهم\nنستمع، نتابع، ونستجيب بسرعة وكفاءة.', status:'⏳ لم تبدأ', link:'' },
-    { period:'الربع الثاني\nمايو', week:'الأسبوع الأول', tool:'المتسوق السري', type:'بوست تعريفي', message:'تقييم حقيقي من قلب التجربة', content:'المتسوق السري… عين التطوير التي لا تُرى 👀\nيقيم الخدمات من واقع التجربة.', status:'⏳ لم تبدأ', link:'' },
-    { period:'الربع الثاني\nمايو', week:'الأسبوع الثاني', tool:'نبض المتعامل', type:'بوست تعريفي', message:'رأيك يصنع الخدمة الأفضل', content:'نبض المتعامل ❤️\nكل رأي يساهم في تطوير الخدمة وتحسين تجربتك.', status:'⏳ لم تبدأ', link:'' },
-    { period:'الربع الثاني\nمايو', week:'الأسبوع الثالث', tool:'مجالس المتعاملين', type:'بوست تعريفي', message:'شراكة حقيقية في صناعة القرار', content:'مجالس المتعاملين… لأن صوتك يستحق أن يُسمع\nمن الحوار تبدأ رحلة التطوير.', status:'⏳ لم تبدأ', link:'' },
-    { period:'الربع الثاني\nمايو', week:'الأسبوع الرابع', tool:'مرصد الخدمات', type:'بوست تعريفي', message:'بيانات دقيقة… قرارات أفضل', content:'مرصد الخدمات الحكومية 📊\nكل ملاحظة تُترجم إلى قرار… وكل قرار يصنع خدمة أفضل.', status:'⏳ لم تبدأ', link:'' }
-  ],
-  councils: [
-    { date:'', type:'تصميم منشور', title:'تصميم 1 - مجالس المتعاملين', dept:'قسم تجربة المتعاملين', status:'✅ تم النشر', link:'', notes:'' },
-    { date:'', type:'تصميم منشور', title:'تصميم 2 - مجالس المتعاملين', dept:'قسم تجربة المتعاملين', status:'✅ تم النشر', link:'', notes:'' },
-    { date:'', type:'تصميم منشور', title:'تصميم 3 - مجالس المتعاملين', dept:'قسم تجربة المتعاملين', status:'✅ تم النشر', link:'', notes:'' },
-    { date:'27/04/2026', type:'📱 تصميم منشور', title:'تصميم إطلاق خدمة إصدار بطاقة طاقم الطائرة المدعومة بالذكاء الاصطناعي', dept:'قسم تجربة المتعاملين', status:'🔄 بانتظار الاعتماد', link:'', notes:'أرسل للاعتماد اليوم' }
-  ],
-  stars7: [
-    { date:'12 أبريل 2026', type:'بوست تعريفي', content:'هل تعلم؟ ⭐ نظام النجوم العالمي لتصنيف الخدمات أُطلق عام 2011 بهدف الارتقاء بجودة الخدمات الحكومية.', hashtags:'#خدمات_حكومة_الإمارات #نظام_النجوم_العالمي_لتصنيف_الخدمات', status:'✅ تم النشر', link:'https://www.instagram.com/p/DWjkgViiMnN/', notes:'' },
-    { date:'14 أبريل 2026', type:'بوست تجربة 7 نجوم', content:'ماذا تعني تجربة 7 نجوم؟ 🌟 تجربة متكاملة: سرعة في الإنجاز، خدمات واضحة وسهلة، إنجاز من أول مرة.', hashtags:'#خدمات_سبع_نجوم #برنامج_الإمارات_للخدمة_الحكومية_المتميزة', status:'✅ تم النشر', link:'https://www.instagram.com/p/DXLkekyiJg6/', notes:'' },
-    { date:'16 أبريل 2026', type:'بوست التقييم', content:'كيف يتم التقييم؟ 📊 منهجية دقيقة: 65% تجربة المتعامل + 35% الجهد المؤسسي.', hashtags:'#نظام_النجوم_دورة_2025_2026', status:'🔜 جاهز - لم ينشر بعد', link:'', notes:'' },
-    { date:'18 أبريل 2026', type:'بوست التطوير', content:'رحلة تطوير مستمرة 🚀 نعمل باستمرار على تطوير خدماتنا ومراكزنا وقنواتنا الرقمية.', hashtags:'#تطوير_الخدمات #خدمات_حكومة_الإمارات', status:'✅ تم النشر', link:'https://www.instagram.com/gcaauae/p/DXjmyulCFek/', notes:'' },
-    { date:'21 أبريل 2026', type:'بوست الاستعداد', content:'جاهزون للمرحلة القادمة ✔️ نطور خدماتنا باستمرار، نرفع كفاءة الأداء، نركز على رضا المتعامل.', hashtags:'#نظام_النجوم #التميز_الحكومي', status:'✅ تم النشر', link:'https://www.instagram.com/gcaauae/p/DXZd1V7iFhR/', notes:'' },
-    { date:'24 أبريل 2026', type:'بوست الأثر', content:'نحو تجربة أفضل لك 🌍 ضمن دورة 2026 سيتم تقييم أكثر من 150 قناة خدمة حكومية.', hashtags:'#برنامج_الإمارات_للخدمة_الحكومية_المتميزة', status:'⏳ لم تبدأ', link:'', notes:'' }
-  ]
+const DEF={
+dp:[
+{code:'DP1',name:'نشر سياسة المشاركة الرقمية على الموقع المؤسسي ضمن قسم المشاركة الرقمية وتتماشى مع التوجهات الوطنية',weight:'10%',evidence:'• رابط صفحة سياسة المشاركة الرقمية\n• تشمل السياسة: الأهداف والنطاق، أصحاب المصلحة، المبادئ التوجيهية، آليات الرد والتقييم',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP2',name:'نشر فرص المشاركة الرقمية على الموقع الرسمي وعلى شارك وفق معايير الجودة',weight:'10%',evidence:'• قائمة بجميع المشاركات الرقمية مع روابطها\n• 3 مشورات مغلقة + 3 حالية/مستقبلية\n• 4 مدونات + 4 استطلاعات + موضوعان في المنتدى',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP3',name:'نشر المشورات المستقبلية للعام الحالي والمقبل لإشراك الجمهور في تطوير الاستراتيجيات',weight:'10%',evidence:'• ملف الخطة المعتمدة\n• قائمة المشورات المخطط لها\n• صور شاشة من المنشورات على شارك',status:'✅ مكتمل',actions:'• تم إعداد خطة المشاركة الرقمية 2026-2027 ومراجعتها مع مصعب الحوسني\n• تم تسليمها لـ TDRA عبر عايشة الغساني',date:'2026-04-22',notes:'الخطة تحتوي 19 نشاط | إيميل عايشة الغساني = إثبات التسليم لـ TDRA'},
+{code:'DP4',name:'نشر معلومات حول مشورات العام الماضي على شارك',weight:'10%',evidence:'• تقرير عن المشورات مع عرض النتائج\n• لا تقل عن 3 مشورات سابقة\n• النتائج: عدد المشاركين، التعليقات، القرار المتخذ',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP5',name:'نشر ملخص لتعليقات العامة المستلمة واستجابتنا لكل فرصة مشاركة رقمية',weight:'10%',evidence:'• قائمة الموضوعات وفرص المشاركة على شارك\n• 3 مدخلات عامة مهمة على الأقل لكل نوع',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP6',name:'نشر أدلة على تضمين آراء الناس في عملية صنع قرار فعلية (كبار السن، أصحاب الهمم، النساء، الشباب)',weight:'10%',evidence:'• صورة للمشورات السابقة\n• عرض النتائج: الفئات، عدد المشاركين، النقاط الرئيسية، القرارات',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP7',name:'نشر معلومات حول مشاركة الجمهور في الإنشاء المشترك في تصميم وتطوير الخدمات والسياسات',weight:'10%',evidence:'• تقرير مشاركة الجمهور في الإنشاء المشترك\n• قائمة الموضوعات، التواريخ، عدد المشاركين\n• النقاط الرئيسية وخطة العمل',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP8',name:'الترويج لفرص المشاركة الرقمية عبر حسابات السوشيال ميديا والبريد الإلكتروني',weight:'5%',evidence:'• نماذج من المنشورات على السوشيال ميديا\n• لقطات شاشة من البريد الإلكتروني',status:'🔄 قيد التنفيذ',actions:'• بوست: إصدار رخصة مهندس صيانة الطائرات (7 أبريل 2026)\n• بوست: تجديد شهادة اللياقة الطبية (1 أبريل 2026)',date:'2026-04-22',notes:'مستمر على مدار العام'},
+{code:'DP9',name:'جمع وتحليل الأفكار والمقترحات الواردة من الجمهور عبر القنوات الرقمية وشارك',weight:'10%',evidence:'• قائمة المقترحات الواردة مع تحليلها\n• الإجراءات المتخذة استجابة لها',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP10',name:'نشر نتائج المشاركات الرقمية خلال العام الماضي على شارك مع عدد الردود',weight:'10%',evidence:'• تقرير عن نتائج المشاركة الرقمية\n• بيانات: عدد المشاركين، التعليقات، معدل التفاعل',status:'⏳ لم تبدأ',actions:'',date:'',notes:''},
+{code:'DP11',name:'إجراء تدريب داخلي واتصالات مع القادة والموظفين للتثقيف بشأن المشاركة الرقمية',weight:'5%',evidence:'• جدول التدريبات المنفذة\n• مواد التدريب والمراسلات الداخلية',status:'⏳ لم تبدأ',actions:'',date:'',notes:''}
+],
+as4:[
+{name:'الاستراتيجية والأهداف',details:'تحديد الهدف الرئيسي من الاستراتيجية التسويقية وكيفية قياس النجاح',content:'',timeline:'',status:'⏳ لم تبدأ',notes:''},
+{name:'الجمهور المستهدف',details:'تحديد الفئات المستهدفة: المتعاملين، الطيارين، شركات الطيران، العموم',content:'',timeline:'',status:'⏳ لم تبدأ',notes:''},
+{name:'القنوات الترويجية',details:'السوشيال ميديا، البريد الإلكتروني، الموقع الرسمي، الفعاليات',content:'',timeline:'',status:'⏳ لم تبدأ',notes:''},
+{name:'عوامل النجاح والمقاييس (KPIs)',details:'عدد المتابعين، نسبة التفاعل، عدد زيارات الموقع، معدل التحويل',content:'',timeline:'',status:'⏳ لم تبدأ',notes:''},
+{name:'الجدول الزمني للأنشطة',details:'جدول الأنشطة الترويجية خلال 2026 على الأرباع الأربعة',content:'',timeline:'',status:'⏳ لم تبدأ',notes:''},
+{name:'خطة الطوارئ',details:'استراتيجيات التسويق الطارئة وطرق التواصل البديلة',content:'',timeline:'',status:'⏳ لم تبدأ',notes:''},
+{name:'أمثلة الترويج (2026)',details:'أمثلة فعلية على الترويج مع الروابط أو الصور',content:'• بوست إنستغرام: إصدار رخصة مهندس صيانة الطائرات - 7 أبريل 2026\n• بوست إنستغرام: تجديد شهادة اللياقة الطبية - 1 أبريل 2026',timeline:'أبريل 2026 - جارٍ',status:'🔄 قيد التنفيذ',notes:''}
+],
+sharak:[
+{type:'منتدى نقاش',title:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',dept:'الموارد البشرية / الاتصال المؤسسي',period:'الربع الأول 2026',duration:'شهر',status:'مغلق',dp:'DP4, DP5',notes:''},
+{type:'استطلاع رأي',title:'ما هي المنصة المفضلة لديكم لمتابعة أخبار ومستجدات الهيئة؟',dept:'الاتصال المؤسسي',period:'الربع الأول حتى الرابع 2026',duration:'سنة',status:'حالية',dp:'DP2, DP8',notes:''},
+{type:'منتدى نقاش',title:'كيف ترون كفاءة استجابة الهيئة في ضمان استمرارية العمليات في مختلف الظروف؟',dept:'الاتصال المؤسسي',period:'الربع الثاني 2026',duration:'شهر',status:'حالية',dp:'DP3, DP6',notes:''},
+{type:'استطلاع رأي',title:'مبادرة نحب سماءنا: أي المنصات الأنسب للوصول إلى أكبر شريحة من الجمهور؟',dept:'الاتصال المؤسسي',period:'الربع الثاني 2026',duration:'شهر',status:'مستقبلية',dp:'DP2, DP8',notes:''},
+{type:'مشورة',title:'ما رأيك بمدى وضوح البيانات الإعلامية والتحديثات الصادرة من الهيئة خلال فترة الأزمة؟',dept:'الاتصال المؤسسي',period:'الربع الثاني 2026',duration:'شهر',status:'مستقبلية',dp:'DP3, DP6',notes:''},
+{type:'مشورة',title:'استبيان رأي الجمهور في حملة "نحب سماءنا"',dept:'تجربة المتعاملين / التراخيص / السلامة',period:'الربع الثاني 2026',duration:'شهر',status:'مستقبلية',dp:'DP5, DP6',notes:''},
+{type:'استطلاع رأي',title:'ما مدى استفادة الجمهور والطلاب من خاصية الذكاء الاصطناعي في البيانات المفتوحة؟',dept:'قسم الدراسات والأبحاث',period:'الربع الثاني 2026',duration:'شهر',status:'مستقبلية',dp:'DP2, DP9',notes:''},
+{type:'مدونة',title:'توظيف خاصية الذكاء الاصطناعي في البيانات المفتوحة في قطاع الطيران',dept:'قسم الدراسات والأبحاث',period:'الربع الثالث 2026',duration:'شهر',status:'مستقبلية',dp:'DP8',notes:''},
+{type:'مدونة',title:'مليون معاملة رقمية - الاحتفاء وقياس أثر التحول الرقمي',dept:'تجربة المتعاملين / تقنية المعلومات',period:'الربع الثالث 2026',duration:'شهر',status:'مستقبلية',dp:'DP8',notes:''},
+{type:'مشورة',title:'نصمم معكم رحلة ترخيص ذكية، استباقية، وسلسة',dept:'تجربة المتعاملين / التراخيص / السلامة',period:'الربع الثالث 2026',duration:'شهر',status:'مستقبلية',dp:'DP3, DP7',notes:''},
+{type:'استطلاع رأي',title:'الذكاء الاصطناعي في تقديم الخدمات الحكومية - استطلاع آراء المتعاملين',dept:'قسم تجربة المتعاملين',period:'الربع الثالث 2026',duration:'شهر',status:'مستقبلية',dp:'DP2, DP9',notes:''},
+{type:'مدونة',title:'المراقب الجوي - شرح مصطلحات في المجال الجوي',dept:'ANS Training',period:'الربع الثالث 2026',duration:'شهر',status:'مستقبلية',dp:'DP8',notes:''},
+{type:'مدونة',title:'كيف تحول السوق العالمي للطيران المستدام من مبادرة إماراتية إلى منصة دولية؟',dept:'مكتب البيئة / البعثة الدائمة في مونتريال',period:'الربع الثالث 2026',duration:'شهر',status:'مستقبلية',dp:'DP8',notes:''},
+{type:'منتدى نقاش',title:'بخصوص تسمية الشخصية الافتراضية التي ستطلقها الهيئة',dept:'الاتصال المؤسسي',period:'الربع الرابع 2026',duration:'شهر',status:'مستقبلية',dp:'DP2',notes:''},
+{type:'مشورة',title:'مشورة تصفير البيروقراطية: معاً لتصميم خدمات حكومية بلا حواجز',dept:'قسم تجربة المتعاملين',period:'الربع الرابع 2026',duration:'شهر',status:'مستقبلية',dp:'DP3, DP6, DP7',notes:''},
+{type:'استطلاع رأي',title:'استطلاع آراء المتعاملين حول كفاءة المساعد الرقمي "صقر AI"',dept:'قسم تجربة المتعاملين',period:'الربع الرابع 2026',duration:'شهر',status:'مستقبلية',dp:'DP2, DP5',notes:''},
+{type:'هاكاثون',title:'هاكاثون الطيران المدني للبيانات المفتوحة',dept:'قطاع السلامة / حامد البلوشي',period:'الربع الرابع 2026',duration:'حدث',status:'مستقبلية',dp:'DP7, DP9',notes:''},
+{type:'استطلاع رأي',title:'استطلاع آراء المستخدمين عن تجربة شارك الإلكتروني',dept:'قسم تجربة المتعاملين',period:'الربع الرابع 2026',duration:'شهر',status:'مستقبلية',dp:'DP2, DP9',notes:''},
+{type:'مشورة',title:'هندسة إجراءات تراخيص طواقم الطيران (نحو تصفير البيروقراطية)',dept:'قسم تجربة المتعاملين',period:'الربع الرابع 2026',duration:'شهر',status:'مستقبلية',dp:'DP3, DP7',notes:''}
+],
+suggestions:[
+{date:'19 فبراير 2026',partType:'منتدى نقاش',partTitle:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',text:"طلب إجراء محادثة فعلية مع فريق الموارد البشرية",dept:'الموارد البشرية',referral:'',status:'جديد',decision:'',closed:''},
+{date:'19 فبراير 2026',partType:'منتدى نقاش',partTitle:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',text:'تجربة إيجابية ومنظمة جداً في معرض مستقبل واعد',dept:'الاتصال المؤسسي',referral:'',status:'جديد',decision:'ملاحظة إيجابية',closed:''},
+{date:'19 فبراير 2026',partType:'منتدى نقاش',partTitle:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',text:'أقترح توفير خيار تقديم سير ذاتية إلكترونياً للراغبين في العمل بقطاع الطيران',dept:'الموارد البشرية',referral:'',status:'جديد',decision:'',closed:''},
+{date:'19 فبراير 2026',partType:'منتدى نقاش',partTitle:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',text:'اقتراح تحسين خدمة العملاء',dept:'قسم تجربة المتعاملين',referral:'',status:'جديد',decision:'',closed:''},
+{date:'19 فبراير 2026',partType:'منتدى نقاش',partTitle:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',text:'اقتراح بإضفاء الطابع الإنساني على عملية التوظيف',dept:'الموارد البشرية',referral:'',status:'جديد',decision:'',closed:''},
+{date:'19 فبراير 2026',partType:'منتدى نقاش',partTitle:'كيف ساهم حضورك لمعرض "مستقبل واعد" للتوظيف في تعزيز معرفتك بفرص قطاع الطيران؟',text:'طلب معلومات عن المؤهلات والشهادات والمسارات التدريبية في قطاع الطيران',dept:'قطاع السلامة / ANS Training',referral:'',status:'جديد',decision:'',closed:''}
+],
+dailyLog:[
+{date:'01/04/2026',day:'الأربعاء',initiative:'🌟 خدمات ذات الأولوية',type:'📱 نشر بوست',task:'بوست تجديد شهادة اللياقة الطبية',link:'https://www.instagram.com/p/DW1g54bCHQI/',dp:'DP8'},
+{date:'07/04/2026',day:'الثلاثاء',initiative:'🌟 خدمات ذات الأولوية',type:'📱 نشر بوست',task:'بوست إصدار رخصة مهندس صيانة الطائرات',link:'https://www.instagram.com/p/DWlUiPeiFFL/',dp:'DP8'},
+{date:'12/04/2026',day:'السبت',initiative:'⭐ 7 نجوم',type:'📱 نشر بوست',task:'بوست 1 - تعريفي - ما هو نظام النجوم العالمي',link:'https://www.instagram.com/p/DWjkgViiMnN/',dp:''},
+{date:'14/04/2026',day:'الاثنين',initiative:'⭐ 7 نجوم',type:'📱 نشر بوست',task:'بوست 2 - ماذا تعني تجربة 7 نجوم؟',link:'https://www.instagram.com/p/DXLkekyiJg6/',dp:''},
+{date:'16/04/2026',day:'الأربعاء',initiative:'⭐ 7 نجوم',type:'📱 نشر بوست',task:'بوست 3 - كيف يتم التقييم؟',link:'https://www.instagram.com/p/DXZd1V7iFhR/',dp:''},
+{date:'22/04/2026',day:'الأربعاء',initiative:'📊 DGOSI',type:'📋 جمع دليل',task:'تسليم خطة المشاركة الرقمية 2026 لـ TDRA عبر عايشة الغساني',link:'DP3_خطة_شارك_2026_إرسال_TDRA.pdf',dp:'DP3'},
+{date:'22/04/2026',day:'الأربعاء',initiative:'🤝 شارك',type:'💬 متابعة اقتراح',task:'جمع 6 اقتراحات من منتدى مستقبل واعد وتسجيلها في الملف',link:'',dp:'DP9'},
+{date:'23/04/2026',day:'الأربعاء',initiative:'📣 أدوات الرصد',type:'✅ مهمة أنجزت',task:'تصميم عرض 3rd Customer Council Presentation',link:'',dp:''},
+{date:'23/04/2026',day:'الأربعاء',initiative:'⭐ 7 نجوم',type:'✅ مهمة أنجزت',task:'تصميم تعميم Global Star Rating Assessment ونشره داخلياً',link:'',dp:''},
+{date:'24/04/2026',day:'الخميس',initiative:'⭐ 7 نجوم',type:'📱 نشر بوست',task:'نشر بوست 4 - رحلة تطوير مستمرة 🚀',link:'https://www.instagram.com/gcaauae/p/DXjmyulCFek/',dp:''},
+{date:'24/04/2026',day:'الخميس',initiative:'⭐ 7 نجوم',type:'✅ مهمة أنجزت',task:'تصميم خلفية سطح المكتب - Global Star Rating Assessment',link:'',dp:''},
+{date:'27/04/2026',day:'الأحد',initiative:'🌟 خدمات ذات الأولوية',type:'📧 إيميل مهم',task:'إرسال تصميم للاعتماد - بوست إطلاق خدمة إصدار بطاقة طاقم الطائرة بالذكاء الاصطناعي',link:'',dp:''}
+],
+quarterly:[
+{item:'المشاركات الرقمية المنفذة (عدد)',q1:'',q2:'',q3:'',q4:''},
+{item:'المشورات المفتوحة',q1:'',q2:'',q3:'',q4:''},
+{item:'المشورات المغلقة',q1:'1',q2:'',q3:'',q4:''},
+{item:'عدد المدونات المنشورة',q1:'',q2:'',q3:'',q4:''},
+{item:'عدد الاستطلاعات',q1:'',q2:'',q3:'',q4:''},
+{item:'إجمالي المشاركين',q1:'',q2:'',q3:'',q4:''},
+{item:'إجمالي التعليقات',q1:'6',q2:'',q3:'',q4:''},
+{item:'عدد منشورات السوشيال ميديا',q1:'',q2:'',q3:'',q4:''},
+{item:'مجالس المتعاملين المنعقدة',q1:'',q2:'',q3:'',q4:''},
+{item:'عدد التدريبات الداخلية',q1:'',q2:'',q3:'',q4:''}
+],
+marketing:[
+{quarter:'الربع الثاني',period:'أبريل - أسبوع 4',tool:'تواصل 171',message:'استجابة مسؤولة… وصوت مسموع',content:'بوست تعريفي: التعريف بدور مركز تواصل 171',type:'بوست',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'مايو - أسبوع 1',tool:'المتسوق السري',message:'تقييم حقيقي من قلب التجربة',content:'بوست تعريفي: عين التطوير التي لا تُرى',type:'بوست',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'مايو - أسبوع 2',tool:'نبض المتعامل',message:'رأيك يصنع الخدمة الأفضل',content:'بوست تعريفي: نبض المتعامل ❤️',type:'بوست',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'مايو - أسبوع 3',tool:'مجالس المتعاملين',message:'شراكة حقيقية في صناعة القرار',content:'بوست تعريفي: مجالس المتعاملين',type:'بوست',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'مايو - أسبوع 4',tool:'مرصد الخدمات',message:'بيانات دقيقة… قرارات أفضل',content:'بوست تعريفي: مرصد الخدمات الحكومية 📊',type:'بوست',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'يونيو - أسبوع 1',tool:'جميع الأدوات',message:'رحلة الملاحظة من المتعامل إلى القرار',content:'فيديو قصير: رحلة تطوير الخدمة',type:'فيديو/ريلز',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'يونيو - أسبوع 2',tool:'جميع الأدوات',message:'الأدوات الخمس في تصميم واحد',content:'إنفوجرافيك: توضيح العلاقة بين الأدوات الخمس',type:'إنفوجرافيك',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'يونيو - أسبوع 3',tool:'تواصل 171',message:'إبراز سرعة الاستجابة',content:'نشر نتائج فعلية من أداة تواصل 171',type:'نتائج/تقرير',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'يونيو - أسبوع 4',tool:'المتسوق السري',message:'إظهار أثر التقييم',content:'قصة نجاح من المتسوق السري',type:'قصة نجاح',status:'⏳ لم تبدأ',link:''},
+{quarter:'الربع الثالث',period:'يوليو - أسبوع 1',tool:'نبض المتعامل',message:'آراء المتعاملين ترفع جودة الخدمات',content:'نتائج رضا المتعاملين',type:'نتائج/تقرير',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'يوليو - أسبوع 2',tool:'مجالس المتعاملين',message:'من الأفكار إلى قرارات تطويرية',content:'مخرجات أحد مجالس المتعاملين',type:'قصة نجاح',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'يوليو - أسبوع 3',tool:'جميع الأدوات',message:'شاركنا رأيك',content:'حملة تفاعلية: استطلاع رقمي',type:'استطلاع تفاعلي',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'أغسطس',tool:'جميع الأدوات',message:'خدمات تطورت بسببك',content:'حملة قصص نجاح',type:'حملة',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'سبتمبر',tool:'جميع الأدوات',message:'دورك في تطوير الخدمات',content:'حملة توعوية',type:'حملة',status:'⏳ لم تبدأ',link:''},
+{quarter:'الربع الرابع',period:'أكتوبر',tool:'جميع الأدوات',message:'أثر أدوات الرصد خلال العام',content:'تقرير بصري: عرض نتائج أدوات الرصد',type:'تقرير بصري',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'نوفمبر',tool:'جميع الأدوات',message:'أرقام ومؤشرات النجاح',content:'حملة إنجازات: أرقام ومؤشرات النجاح',type:'إنفوجرافيك/حملة',status:'⏳ لم تبدأ',link:''},
+{quarter:'',period:'ديسمبر',tool:'جميع الأدوات',message:'التقرير السنوي الشامل',content:'أفضل النتائج + قصص النجاح + التوصيات المستقبلية',type:'تقرير سنوي',status:'⏳ لم تبدأ',link:''}
+],
+monitoring:[
+{period:'الربع الثاني / أبريل',week:'الأسبوع الرابع',tool:'تواصل 171',type:'بوست تعريفي',message:'استجابة مسؤولة… وصوت مسموع',content:'171… لأن صوتك مهم\nنستمع، نتابع، ونستجيب بسرعة.',status:'⏳ لم تبدأ',link:''},
+{period:'الربع الثاني / مايو',week:'الأسبوع الأول',tool:'المتسوق السري',type:'بوست تعريفي',message:'تقييم حقيقي من قلب التجربة',content:'المتسوق السري… عين التطوير التي لا تُرى 👀',status:'⏳ لم تبدأ',link:''},
+{period:'الربع الثاني / مايو',week:'الأسبوع الثاني',tool:'نبض المتعامل',type:'بوست تعريفي',message:'رأيك يصنع الخدمة الأفضل',content:'نبض المتعامل ❤️\nكل رأي يساهم في تطوير الخدمة.',status:'⏳ لم تبدأ',link:''},
+{period:'الربع الثاني / مايو',week:'الأسبوع الثالث',tool:'مجالس المتعاملين',type:'بوست تعريفي',message:'شراكة حقيقية في صناعة القرار',content:'مجالس المتعاملين… لأن صوتك يستحق أن يُسمع',status:'⏳ لم تبدأ',link:''},
+{period:'الربع الثاني / مايو',week:'الأسبوع الرابع',tool:'مرصد الخدمات',type:'بوست تعريفي',message:'بيانات دقيقة… قرارات أفضل',content:'مرصد الخدمات الحكومية 📊',status:'⏳ لم تبدأ',link:''}
+],
+councils:[
+{date:'',type:'تصميم منشور',title:'تصميم 1 - مجالس المتعاملين',dept:'قسم تجربة المتعاملين',status:'✅ تم النشر',link:'',notes:''},
+{date:'',type:'تصميم منشور',title:'تصميم 2 - مجالس المتعاملين',dept:'قسم تجربة المتعاملين',status:'✅ تم النشر',link:'',notes:''},
+{date:'',type:'تصميم منشور',title:'تصميم 3 - مجالس المتعاملين',dept:'قسم تجربة المتعاملين',status:'✅ تم النشر',link:'',notes:''},
+{date:'27/04/2026',type:'📱 تصميم منشور',title:'تصميم إطلاق خدمة إصدار بطاقة طاقم الطائرة المدعومة بالذكاء الاصطناعي',dept:'قسم تجربة المتعاملين',status:'🔄 بانتظار الاعتماد',link:'',notes:'أرسل للاعتماد اليوم'}
+],
+stars7:[
+{date:'12 أبريل 2026',type:'بوست تعريفي',content:'هل تعلم؟ ⭐ نظام النجوم العالمي لتصنيف الخدمات أُطلق عام 2011 بهدف الارتقاء بجودة الخدمات الحكومية.',hashtags:'#خدمات_حكومة_الإمارات #نظام_النجوم_العالمي_لتصنيف_الخدمات',status:'✅ تم النشر',link:'https://www.instagram.com/p/DWjkgViiMnN/',notes:''},
+{date:'14 أبريل 2026',type:'بوست تجربة 7 نجوم',content:'ماذا تعني تجربة 7 نجوم؟ 🌟 تجربة متكاملة: سرعة في الإنجاز، خدمات واضحة وسهلة.',hashtags:'#خدمات_سبع_نجوم #برنامج_الإمارات_للخدمة_الحكومية_المتميزة',status:'✅ تم النشر',link:'https://www.instagram.com/p/DXLkekyiJg6/',notes:''},
+{date:'16 أبريل 2026',type:'بوست التقييم',content:'كيف يتم التقييم؟ 📊 منهجية دقيقة: 65% تجربة المتعامل + 35% الجهد المؤسسي.',hashtags:'#نظام_النجوم_دورة_2025_2026',status:'🔜 جاهز - لم ينشر',link:'',notes:''},
+{date:'18 أبريل 2026',type:'بوست التطوير',content:'رحلة تطوير مستمرة 🚀 نعمل باستمرار على تطوير خدماتنا ومراكزنا وقنواتنا الرقمية.',hashtags:'#تطوير_الخدمات #خدمات_حكومة_الإمارات',status:'✅ تم النشر',link:'https://www.instagram.com/gcaauae/p/DXjmyulCFek/',notes:''},
+{date:'21 أبريل 2026',type:'بوست الاستعداد',content:'جاهزون للمرحلة القادمة ✔️ نطور خدماتنا باستمرار، نرفع كفاءة الأداء، نركز على رضا المتعامل.',hashtags:'#نظام_النجوم #التميز_الحكومي',status:'✅ تم النشر',link:'https://www.instagram.com/gcaauae/p/DXZd1V7iFhR/',notes:''},
+{date:'24 أبريل 2026',type:'بوست الأثر',content:'نحو تجربة أفضل لك 🌍 ضمن دورة 2026 سيتم تقييم أكثر من 150 قناة خدمة حكومية.',hashtags:'#برنامج_الإمارات_للخدمة_الحكومية_المتميزة',status:'⏳ لم تبدأ',link:'',notes:''}
+],
+priority:[
+{date:'01/04/2026',name:'تجديد شهادة اللياقة الطبية',kind:'شهادة',postType:'📱 بوست إنستغرام',platform:'Instagram',desc:'ترويج خدمة تجديد شهادة اللياقة الطبية للطيارين',status:'✅ تم النشر',link:'https://www.instagram.com/p/DW1g54bCHQI/',notes:''},
+{date:'07/04/2026',name:'إصدار رخصة مهندس صيانة الطائرات',kind:'رخصة',postType:'📱 بوست إنستغرام',platform:'Instagram',desc:'ترويج خدمة إصدار رخصة AME',status:'✅ تم النشر',link:'https://www.instagram.com/p/DWlUiPeiFFL/',notes:''},
+{date:'27/04/2026',name:'إصدار بطاقة الطاقم الجوي',kind:'بطاقة',postType:'📧 إيميل داخلي',platform:'',desc:'إرسال تصميم للاعتماد - بوست إطلاق خدمة إصدار بطاقة الطاقم الجوي',status:'🔄 بانتظار الاعتماد',link:'',notes:''}
+],
+weeklyReport:{done:[],next:[],challenges:'',history:[]}
 };
+</script>
 
-// ==================== STATE ====================
-let data = JSON.parse(localStorage.getItem('gcaa_digital_2026')) || JSON.parse(JSON.stringify(defaultData));
-let currentSection = 'dashboard';
-let currentModal = '';
 
-// ==================== UTILITIES ====================
-function saveAll() {
-  localStorage.setItem('gcaa_digital_2026', JSON.stringify(data));
-  document.getElementById('last-update').textContent = new Date().toISOString().split('T')[0];
-  showToast('✅ تم الحفظ بنجاح!');
-  renderDashboard();
+<script>
+
+// ========= DATA LAYER =========
+const LS_KEY = 'gcaa_2026_v3';
+let D = {};
+
+function loadData() {
+  const saved = localStorage.getItem(LS_KEY);
+  D = JSON.parse(JSON.stringify(DEF)); // always start from DEF
+  if (saved) {
+    try {
+      const old = JSON.parse(saved);
+      // Merge: keep user edits but add any new DEF entries
+      Object.keys(DEF).forEach(key => {
+        if (Array.isArray(DEF[key]) && Array.isArray(old[key])) {
+          // Use old data for existing rows, append new DEF rows
+          D[key] = old[key].length >= DEF[key].length
+            ? old[key]
+            : [...old[key], ...DEF[key].slice(old[key].length)];
+        } else if (key === 'weeklyReport' && old[key]) {
+          D[key] = old[key];
+        }
+      });
+    } catch(e) { /* keep DEF */ }
+  }
+  if (!D.weeklyReport) D.weeklyReport = {done:[],next:[],challenges:'',history:[]};
 }
+
+function save() {
+  localStorage.setItem(LS_KEY, JSON.stringify(D));
+  const el = document.getElementById('last-save');
+  if (el) el.textContent = new Date().toLocaleTimeString('ar-AE');
+  showToast('تم الحفظ ✓');
+}
+function saveAll() { save(); showToast('تم حفظ جميع البيانات ✓'); }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-function statusClass(status) {
-  if (!status) return 'status-new';
-  if (status.includes('مكتمل') || status.includes('تم النشر') || status.includes('تم')) return 'status-done';
-  if (status.includes('قيد') || status.includes('التنفيذ') || status.includes('جارٍ') || status.includes('بانتظار') || status.includes('جاهز')) return 'status-inprogress';
-  if (status.includes('لم تبدأ') || status.includes('لم ينشر')) return 'status-notstarted';
-  if (status.includes('جديد') || status.includes('حالية') || status.includes('مستقبلية')) return 'status-new';
-  if (status.includes('مغلق')) return 'status-closed';
-  return 'status-new';
+// ========= HELPERS =========
+function secKey(sec) { return sec === 'dailylog' ? 'dailyLog' : sec; }
+
+function sc(status) {
+  if (!status) return 'not';
+  const s = status;
+  if (s.includes('مكتم') || s.includes('تم النشر') || s.includes('مغلوق') || s.includes('✅')) return 'done';
+  if (s.includes('جار') || s.includes('قيد') || s.includes('حالية') || s.includes('بانتظار') || s.includes('اعتماد') || s.includes('صدر') || s.includes('فاعل') || s.includes('مستمر') || s.includes('🔄')) return 'prog';
+  return 'not';
 }
 
-function makeStatusSelect(options, current, onChange) {
-  const sel = document.createElement('select');
-  sel.className = 'status-select ' + statusClass(current);
-  options.forEach(opt => {
-    const o = document.createElement('option');
-    o.value = opt; o.textContent = opt;
-    if (opt === current) o.selected = true;
-    sel.appendChild(o);
-  });
-  sel.onchange = function() {
-    sel.className = 'status-select ' + statusClass(sel.value);
-    onChange(sel.value);
-    saveAll();
+// ========= CELL BUILDERS =========
+function ec(key, i, field, ph) {
+  const arr = D[key];
+  if (!arr || !arr[i]) return '';
+  const val = (arr[i][field] || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return '<div class="ec" contenteditable="true" data-key="' + key + '" data-idx="' + i + '" data-field="' + field + '" onblur="cellBlur(this)">' + val + '</div>';
+}
+
+function cellBlur(el) {
+  const key = el.dataset.key, idx = +el.dataset.idx, field = el.dataset.field;
+  if (D[key] && D[key][idx] !== undefined) { D[key][idx][field] = el.innerText.trim(); save(); }
+}
+
+function lc(key, i, field) {
+  const arr = D[key];
+  if (!arr || !arr[i]) return '';
+  const val = (arr[i][field] || '').replace(/"/g, '&quot;');
+  const id = 'lc-' + key + '-' + i + '-' + field;
+  const hasVal = arr[i][field] && arr[i][field].trim();
+  return '<div class="lc-wrap"><input class="lc-input" id="' + id + '" type="text" value="' + val + '" placeholder="https://..." onblur="lcBlur(this,\'' + key + '\',' + i + ',\'' + field + '\')"><a class="lc-link" id="' + id + '-a" href="' + (hasVal ? arr[i][field] : '#') + '" target="_blank" style="display:' + (hasVal ? 'inline' : 'none') + '">🔗</a></div>';
+}
+
+function lcBlur(inp, key, i, field) {
+  const v = inp.value.trim();
+  D[key][i][field] = v;
+  const a = document.getElementById(inp.id + '-a');
+  if (a) { a.href = v || '#'; a.style.display = v ? 'inline' : 'none'; }
+  save();
+}
+
+function ss(key, i, field, opts) {
+  const arr = D[key];
+  if (!arr || !arr[i]) return '';
+  const val = arr[i][field] || '';
+  const cls = sc(val);
+  return '<select class="ss-sel ss-' + cls + '" onchange="ssChange(this,\'' + key + '\',' + i + ',\'' + field + '\')">' +
+    opts.map(o => '<option' + (o === val ? ' selected' : '') + '>' + o + '</option>').join('') + '</select>';
+}
+
+function ssChange(el, key, i, field) {
+  D[key][i][field] = el.value;
+  el.className = 'ss-sel ss-' + sc(el.value);
+  save();
+}
+
+function delBtn(key, i, sec) {
+  return '<td><span class="del-btn" onclick="confirmDelete(\'' + key + '\',' + i + ',\'' + sec + '\')">✕</span></td>';
+}
+
+// ========= MODAL / DELETE =========
+let _delCb = null;
+function confirmDelete(key, i, sec) {
+  document.getElementById('mo-title').textContent = 'حذف الصف';
+  document.getElementById('mo-body').innerHTML = '<p style="color:#e74c3c">هل تريد حذف هذا الصف؟ لا يمكن التراجع.</p>';
+  _delCb = () => { if(D[key]) { D[key].splice(i,1); save(); renderSec(sec); } closeModal(); };
+  document.getElementById('modal').style.display = 'flex';
+}
+function modalOK() { if (_delCb) { _delCb(); } _delCb = null; }
+function closeModal() { document.getElementById('modal').style.display = 'none'; _delCb = null; }
+
+// ========= ADD ROW =========
+const ROW_DEFAULTS = {
+  dp:          {code:'',name:'',weight:'10%',evidence:'',status:'⧓ لم تبدأ',actions:'',date:'',notes:''},
+  as4:         {name:'',details:'',content:'',timeline:'',status:'⧓ لم تبدأ',notes:''},
+  sharak:      {type:'',title:'',dept:'',period:'',duration:'',status:'مستقبلية',dp:'',sharakLink:'',socialLink:'',notes:''},
+  suggestions: {date:'',partType:'',partTitle:'',text:'',dept:'',referral:'',status:'جديد',decision:'',closed:''},
+  dailyLog:    {date:'',day:'',initiative:'',type:'',task:'',link:'',dp:''},
+  quarterly:   {item:'',q1:'',q2:'',q3:'',q4:''},
+  marketing:   {quarter:'',month:'',tool:'',message:'',content:'',kind:'',status:'⧓ لم تبدأ',link:''},
+  monitoring:  {quarter:'',week:'',tool:'',content:'',message:'',idea:'',status:'⧓ لم تبدأ',link:''},
+  councils:    {date:'',type:'',title:'',dept:'',status:'⧓ قيد التصميم',link:'',notes:''},
+  stars7:      {date:'',type:'',content:'',hashtags:'',status:'⧓ لم تبدأ',link:'',notes:''},
+  priority:    {date:'',name:'',kind:'',postType:'',platform:'',desc:'',status:'⏳ لم تبدأ',link:'',notes:''}
+};
+
+function addRow(sec) {
+  const key = secKey(sec);
+  if (!D[key]) return;
+  D[key].push(Object.assign({}, ROW_DEFAULTS[key] || {}));
+  save();
+  renderSec(sec);
+}
+
+// ========= NAVIGATION =========
+function renderSec(sec) {
+  const map = {
+    dashboard: renderDash, dp: renderDP, as4: renderAS4, priority: renderPri,
+    sharak: renderSharak, suggestions: renderSug, dailylog: renderLog,
+    quarterly: renderQtr, marketing: renderMkt, monitoring: renderMon,
+    councils: renderCou, stars7: renderS7, weekly: renderWeekly
   };
-  return sel;
+  if (map[sec]) map[sec]();
 }
 
-function makeEditable(text, onChange) {
-  const span = document.createElement('span');
-  span.contentEditable = true;
-  span.className = 'editable';
-  span.textContent = text || '';
-  span.onblur = function() { onChange(span.textContent.trim()); saveAll(); };
-  return span;
-}
-
-function linkCell(url) {
-  if (!url) return '';
-  if (url.startsWith('http')) return `<a href="${url}" target="_blank" style="color:var(--blue);font-size:11px;word-break:break-all;">🔗 رابط</a>`;
-  return `<span style="font-size:11px;color:var(--text-light);">${url}</span>`;
-}
-
-// ==================== SECTION NAVIGATION ====================
-function showSection(id) {
-  currentSection = id;
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById('section-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  const titles = { dashboard:'لوحة التحكم', dp:'معايير DP1-DP11', as4:'AS4 التسويق', sharak:'خطة شارك 2026', suggestions:'متابعة الاقتراحات', dailylog:'السجل اليومي', quarterly:'التقارير الفصلية', marketing:'خطة التسويق والترويج', monitoring:'أدوات الرصد', councils:'مجالس المتعاملين', stars7:'ترويج 7 نجوم' };
-  document.getElementById('topbar-title').textContent = titles[id] || '';
-  render(id);
-}
-
-// ==================== RENDER ALL ====================
-function render(id) {
-  if (id === 'dashboard') renderDashboard();
-  else if (id === 'dp') renderDP();
-  else if (id === 'as4') renderAS4();
-  else if (id === 'sharak') renderSharak();
-  else if (id === 'suggestions') renderSuggestions();
-  else if (id === 'dailylog') renderLog();
-  else if (id === 'quarterly') renderQuarterly();
-  else if (id === 'marketing') renderMarketing();
-  else if (id === 'monitoring') renderMonitoring();
-  else if (id === 'councils') renderCouncils();
-  else if (id === 'stars7') renderStars7();
-}
-
-// ==================== DASHBOARD ====================
-function renderDashboard() {
-  const dp = data.dp;
-  const done = dp.filter(d => d.status === '✅ مكتمل').length;
-  const inprog = dp.filter(d => d.status === '🔄 قيد التنفيذ').length;
-  const notstarted = dp.filter(d => d.status === '⏳ لم تبدأ').length;
-  const total = dp.length;
-  const pct = Math.round((done / total) * 100);
-
-  document.getElementById('overall-pct').textContent = pct + '%';
-  document.getElementById('overall-sub').textContent = `${done} مكتمل من أصل ${total} معيار`;
-  document.getElementById('overall-bar').style.width = pct + '%';
-  document.getElementById('dash-done').textContent = done;
-  document.getElementById('dash-inprog').textContent = inprog;
-  document.getElementById('dash-done2').textContent = done;
-  document.getElementById('dash-inprog2').textContent = inprog;
-  document.getElementById('dash-notstarted').textContent = notstarted;
-  document.getElementById('dash-suggestions').textContent = data.suggestions.length;
-  document.getElementById('dash-activities').textContent = data.dailyLog.length;
-
-  // DP progress list
-  const dpList = document.getElementById('dp-progress-list');
-  dpList.innerHTML = '';
-  dp.forEach(d => {
-    const pv = d.status === '✅ مكتمل' ? 100 : d.status === '🔄 قيد التنفيذ' ? 50 : 0;
-    const fc = pv === 100 ? 'fill-success' : pv === 50 ? 'fill-warning' : 'fill-navy';
-    dpList.innerHTML += `<div class="progress-item">
-      <div class="progress-label"><span>${d.code}: ${d.name.substring(0,45)}...</span><span class="status-badge ${statusClass(d.status)}">${d.status}</span></div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill ${fc}" style="width:${pv}%"></div></div>
-    </div>`;
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    const sec = el.dataset.sec;
+    const secEl = document.getElementById('sec-' + sec);
+    if (secEl) secEl.classList.add('active');
+    const tb = document.getElementById('tb-title');
+    if (tb) tb.textContent = el.textContent.trim();
+    renderSec(sec);
   });
+});
 
-  // AS4 progress
-  const as4List = document.getElementById('as4-progress-list');
-  as4List.innerHTML = '';
-  data.as4.forEach(a => {
-    const pv = a.status === '✅ مكتمل' ? 100 : a.status === '🔄 قيد التنفيذ' ? 50 : 0;
-    const fc = pv === 100 ? 'fill-success' : pv === 50 ? 'fill-warning' : 'fill-gold';
-    as4List.innerHTML += `<div class="progress-item">
-      <div class="progress-label"><span style="font-size:12px;">${a.name}</span><span class="status-badge ${statusClass(a.status)}" style="font-size:10px;">${a.status}</span></div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill ${fc}" style="width:${pv}%"></div></div>
-    </div>`;
-  });
-
-  // Stars7 progress
-  const s7List = document.getElementById('stars7-progress-list');
-  s7List.innerHTML = '';
-  data.stars7.forEach((s, i) => {
-    const pv = s.status.includes('تم') ? 100 : s.status.includes('جاهز') ? 70 : s.status.includes('قيد') ? 50 : 0;
-    const fc = pv === 100 ? 'fill-success' : pv >= 50 ? 'fill-warning' : 'fill-gold';
-    s7List.innerHTML += `<div class="progress-item">
-      <div class="progress-label"><span style="font-size:12px;">بوست ${i+1}: ${s.type}</span><span class="status-badge ${statusClass(s.status)}" style="font-size:10px;">${s.status}</span></div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill ${fc}" style="width:${pv}%"></div></div>
-    </div>`;
+// ========= DRAG & DROP =========
+function setupDragDrop(tbody, key, sec) {
+  if (!tbody) return;
+  const rows = tbody.querySelectorAll('tr');
+  rows.forEach((row, idx) => {
+    const handle = row.querySelector('.drag-handle');
+    if (!handle) return;
+    handle.addEventListener('mousedown', () => row.setAttribute('draggable','true'));
+    handle.addEventListener('mouseup',   () => row.setAttribute('draggable','false'));
+    row.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', String(idx));
+      row.style.opacity = '0.5';
+    });
+    row.addEventListener('dragend', () => {
+      row.style.opacity = '';
+      tbody.querySelectorAll('tr').forEach(r => r.style.background = '');
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      row.style.background = 'rgba(46,103,151,.12)';
+    });
+    row.addEventListener('dragleave', () => row.style.background = '');
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      row.style.background = '';
+      const from = +e.dataTransfer.getData('text/plain');
+      const to = idx;
+      if (from === to || !D[key]) return;
+      const arr = D[key];
+      const [item] = arr.splice(from, 1);
+      arr.splice(to, 0, item);
+      save(); renderSec(sec);
+    });
   });
 }
 
-// ==================== DP TABLE ====================
+// ========= SORT =========
+function sortByField(key, field) {
+  const arr = D[key] || D[secKey(key)];
+  if (!arr) return;
+  arr.sort((a, b) => {
+    const va = a[field] || '', vb = b[field] || '';
+    // Try Arabic date parse DD/MM/YYYY
+    const pa = va.split('/'), pb = vb.split('/');
+    if (pa.length === 3 && pb.length === 3) {
+      const da = new Date(+pa[2], +pa[1]-1, +pa[0]);
+      const db = new Date(+pb[2], +pb[1]-1, +pb[0]);
+      if (!isNaN(da) && !isNaN(db)) return db - da;
+    }
+    // Try ISO
+    const da2 = new Date(va), db2 = new Date(vb);
+    if (!isNaN(da2) && !isNaN(db2)) return db2 - da2;
+    return vb.localeCompare(va, 'ar');
+  });
+  // Find active section to re-render
+  const activeSec = document.querySelector('.section.active');
+  if (activeSec) renderSec(activeSec.id.replace('sec-',''));
+  save();
+}
+
+// ========= RENDER: PRIORITY SERVICES =========
+const S_PRI = ['🔄 بانتظار الاعتماد','✅ تم النشر','⏳ لم تبدأ','❌ ملغى'];
+
+function renderPri() {
+  const tb = document.getElementById('pri-body');
+  if (!tb) return;
+  tb.innerHTML = (D.priority||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td style="text-align:center;color:var(--gold);font-weight:700">' + (i+1) + '</td>' +
+    '<td>' + ec('priority',i,'date','DD/MM/YYYY') + '</td>' +
+    '<td>' + ec('priority',i,'name','اسم الخدمة') + '</td>' +
+    '<td>' + ec('priority',i,'kind','نوع الخدمة') + '</td>' +
+    '<td>' + ec('priority',i,'postType','نوع المنشور') + '</td>' +
+    '<td>' + ec('priority',i,'platform','المنصة') + '</td>' +
+    '<td>' + ec('priority',i,'desc','الوصف') + '</td>' +
+    '<td>' + ss('priority',i,'status',S_PRI) + '</td>' +
+    '<td>' + lc('priority',i,'link') + '</td>' +
+    '<td>' + ec('priority',i,'notes','ملاحظات') + '</td>' +
+    delBtn('priority',i,'priority') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'priority','priority');
+}
+
+// ========= RENDER: DASHBOARD =========
+function renderDash() {
+  var done=0,prog=0,notS=0;
+  (D.dp||[]).forEach(function(r){
+    if(r.status&&r.status.includes('مكتم'))done++;
+    else if(r.status&&(r.status.includes('قيد')||r.status.includes('جار')))prog++;
+    else notS++;
+  });
+  var total=(D.dp||[]).length||11;
+  var pct=Math.round(done/total*100);
+  var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  set('ov-pct',pct+'%');
+  var bar=document.getElementById('ov-bar');if(bar)bar.style.width=pct+'%';
+  set('dv-done',done);set('dv-prog',prog);set('dv-not',notS);
+  set('dv-done2',done);set('dv-prog2',prog);set('dv-not2',notS);
+  set('dv-sug',(D.suggestions||[]).length);
+  set('dv-log',(D.dailyLog||[]).length);
+
+  var dpEl=document.getElementById('dp-prog');
+  if(!dpEl)return;
+  if(!D.dashDPOrder||D.dashDPOrder.length!==(D.dp||[]).length)
+    D.dashDPOrder=(D.dp||[]).map(function(_,i){return i;});
+
+  var colDone=[],colProg=[],colNot=[];
+  D.dashDPOrder.forEach(function(idx){
+    var r=(D.dp||[])[idx];if(!r)return;
+    var cls=r.status&&r.status.includes('مكتم')?'done':
+             r.status&&(r.status.includes('قيد')||r.status.includes('جار'))?'prog':'not';
+    var card='<div class="dp-card '+cls+'" draggable="true"'+
+      ' ondragstart="dashDragStart(event,'+idx+')"'+
+      ' ondragover="this.style.outline=\'2px dashed #D4A72A\';event.preventDefault()"'+
+      ' ondragleave="this.style.outline=\'\'"'+
+      ' ondrop="dashDrop(event,'+idx+');this.style.outline=\'\'">'+
+      '<div class="dc">'+(r.code||'DP?')+'</div>'+
+      '<div class="dn">'+((r.name||'').substring(0,55))+'</div>'+
+      '<div class="dw">الوزن: '+(r.weight||'—')+'</div>'+
+      '</div>';
+    if(cls==='done')colDone.push(card);
+    else if(cls==='prog')colProg.push(card);
+    else colNot.push(card);
+  });
+
+  var empty='<div style="font-size:11px;color:var(--muted);text-align:center;padding:10px">لا يوجد</div>';
+  dpEl.innerHTML=
+    '<div class="kb-grid">'+
+      '<div class="kb-col">'+
+        '<div class="kb-col-title done">✅ مكتمل ('+colDone.length+')</div>'+
+        (colDone.length?colDone.join(''):empty)+
+      '</div>'+
+      '<div class="kb-col">'+
+        '<div class="kb-col-title prog">🔄 قيد التنفيذ ('+colProg.length+')</div>'+
+        (colProg.length?colProg.join(''):empty)+
+      '</div>'+
+      '<div class="kb-col">'+
+        '<div class="kb-col-title not">⏳ لم تبدأ ('+colNot.length+')</div>'+
+        (colNot.length?colNot.join(''):empty)+
+      '</div>'+
+    '</div>';
+
+  var as4El=document.getElementById('as4-prog');
+  if(as4El)as4El.innerHTML=(D.as4||[]).map(function(r){
+    var cls=sc(r.status);
+    return '<div class="pb-row"><div class="pb-label" style="flex:1;font-size:11px"><span>'+(r.name||'').substring(0,28)+'</span></div><span class="tag tag-'+cls+'">'+(r.status||'—')+'</span></div>';
+  }).join('');
+
+  var s7El=document.getElementById('s7-prog');
+  if(s7El)s7El.innerHTML=(D.stars7||[]).map(function(r){
+    var cls=sc(r.status);
+    return '<div class="pb-row"><div class="pb-label" style="flex:1;font-size:10px"><span>'+(r.content||r.type||'').substring(0,32)+'</span></div><span class="tag tag-'+cls+'">'+(r.status||'—')+'</span></div>';
+  }).join('');
+}
+
+var _dashDrag=null;
+function dashDragStart(e,idx){_dashDrag=idx;}
+function dashDrop(e,toIdx){
+  if(_dashDrag===null||_dashDrag===toIdx)return;
+  if(!D.dashDPOrder)D.dashDPOrder=(D.dp||[]).map(function(_,i){return i;});
+  var from=D.dashDPOrder.indexOf(_dashDrag);
+  var to=D.dashDPOrder.indexOf(toIdx);
+  if(from<0||to<0)return;
+  D.dashDPOrder.splice(from,1);D.dashDPOrder.splice(to,0,_dashDrag);
+  _dashDrag=null;save();renderDash();
+}
+
+
+// ========= RENDER: DP =========
 function renderDP() {
-  const tbody = document.getElementById('dp-tbody');
-  tbody.innerHTML = '';
-  data.dp.forEach((d, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_DP, d.status, v => data.dp[i].status = v);
-    const actionsEl = makeEditable(d.actions, v => data.dp[i].actions = v);
-    const dateEl = makeEditable(d.date, v => data.dp[i].date = v);
-    const notesEl = makeEditable(d.notes, v => data.dp[i].notes = v);
-
-    tr.innerHTML = `<td class="code-cell">${d.code}</td>
-      <td style="max-width:220px;font-weight:600;">${d.name}</td>
-      <td class="weight-cell">${d.weight}</td>
-      <td><div class="evidence-box">${d.evidence}</div></td>
-      <td></td><td style="max-width:200px;"></td><td style="min-width:100px;"></td><td style="max-width:180px;"></td>`;
-    tr.cells[4].appendChild(statusSel);
-    tr.cells[5].appendChild(actionsEl);
-    tr.cells[6].appendChild(dateEl);
-    tr.cells[7].appendChild(notesEl);
-    tbody.appendChild(tr);
-  });
+  const tb = document.getElementById('dp-body');
+  if (!tb) return;
+  tb.innerHTML = (D.dp||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td>' + ec('dp',i,'code','DP1') + '</td>' +
+    '<td>' + ec('dp',i,'name','اسم المعيار') + '</td>' +
+    '<td>' + ec('dp',i,'weight','10%') + '</td>' +
+    '<td>' + ec('dp',i,'evidence','الأدلة') + '</td>' +
+    '<td>' + ss('dp',i,'status',S_DP) + '</td>' +
+    '<td>' + ec('dp',i,'actions','الإجراءات') + '</td>' +
+    '<td>' + ec('dp',i,'date','YYYY-MM-DD') + '</td>' +
+    '<td>' + ec('dp',i,'notes','ملاحظات') + '</td>' +
+    delBtn('dp',i,'dp') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'dp','dp');
 }
 
-// ==================== AS4 TABLE ====================
+// ========= RENDER: AS4 =========
 function renderAS4() {
-  const tbody = document.getElementById('as4-tbody');
-  tbody.innerHTML = '';
-  data.as4.forEach((a, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_DP, a.status, v => data.as4[i].status = v);
-    const contentEl = makeEditable(a.content, v => data.as4[i].content = v);
-    const timelineEl = makeEditable(a.timeline, v => data.as4[i].timeline = v);
-    const notesEl = makeEditable(a.notes, v => data.as4[i].notes = v);
-
-    tr.innerHTML = `<td class="weight-cell">${i+1}</td>
-      <td style="font-weight:700;color:var(--navy);max-width:150px;">${a.name}</td>
-      <td style="max-width:200px;font-size:12px;color:var(--text-light);">${a.details}</td>
-      <td style="max-width:220px;"></td><td style="min-width:110px;"></td><td></td><td style="max-width:150px;"></td>`;
-    tr.cells[3].appendChild(contentEl);
-    tr.cells[4].appendChild(timelineEl);
-    tr.cells[5].appendChild(statusSel);
-    tr.cells[6].appendChild(notesEl);
-    tbody.appendChild(tr);
-  });
+  const tb = document.getElementById('as4-body');
+  if (!tb) return;
+  tb.innerHTML = (D.as4||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td style="text-align:center;color:var(--gold);font-weight:700">' + (i+1) + '</td>' +
+    '<td>' + ec('as4',i,'name','عنصر الخطة') + '</td>' +
+    '<td>' + ec('as4',i,'details','التفاصيل') + '</td>' +
+    '<td>' + ec('as4',i,'content','المحتوى') + '</td>' +
+    '<td>' + ec('as4',i,'timeline','الجدول') + '</td>' +
+    '<td>' + ss('as4',i,'status',S_DP) + '</td>' +
+    '<td>' + ec('as4',i,'notes','ملاحظات') + '</td>' +
+    delBtn('as4',i,'as4') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'as4','as4');
 }
 
-// ==================== SHARAK TABLE ====================
+// ========= RENDER: SHARAK =========
 function renderSharak() {
-  const tbody = document.getElementById('sharak-tbody');
-  tbody.innerHTML = '';
-  data.sharak.forEach((s, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_SHARAK, s.status, v => data.sharak[i].status = v);
-    const notesEl = makeEditable(s.notes, v => data.sharak[i].notes = v);
-
-    tr.innerHTML = `<td class="weight-cell">${i+1}</td>
-      <td><span class="tag tag-blue">${s.type}</span></td>
-      <td style="max-width:200px;font-weight:600;">${s.title}</td>
-      <td style="font-size:12px;">${s.dept}</td>
-      <td style="font-size:12px;">${s.sector}</td>
-      <td style="font-size:12px;white-space:nowrap;">${s.period}</td>
-      <td style="font-size:12px;">${s.duration}</td>
-      <td></td>
-      <td><span class="tag tag-gold">${s.dp}</span></td>
-      <td></td>`;
-    tr.cells[7].appendChild(statusSel);
-    tr.cells[9].appendChild(notesEl);
-    tbody.appendChild(tr);
-  });
+  const tb = document.getElementById('sharak-body');
+  if (!tb) return;
+  tb.innerHTML = (D.sharak||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td style="text-align:center;color:var(--gold);font-weight:700">' + (i+1) + '</td>' +
+    '<td>' + ec('sharak',i,'type','نوع') + '</td>' +
+    '<td>' + ec('sharak',i,'title','عنوان') + '</td>' +
+    '<td>' + ec('sharak',i,'dept','الإدارة') + '</td>' +
+    '<td>' + ec('sharak',i,'period','الفترة') + '</td>' +
+    '<td>' + ec('sharak',i,'duration','المدة') + '</td>' +
+    '<td>' + ss('sharak',i,'status',S_SHAR) + '</td>' +
+    '<td>' + ec('sharak',i,'dp','DP') + '</td>' +
+    '<td>' + lc('sharak',i,'sharakLink') + '</td>' +
+    '<td>' + lc('sharak',i,'socialLink') + '</td>' +
+    '<td>' + ec('sharak',i,'notes','ملاحظات') + '</td>' +
+    delBtn('sharak',i,'sharak') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'sharak','sharak');
 }
 
-// ==================== SUGGESTIONS TABLE ====================
-function renderSuggestions() {
-  const tbody = document.getElementById('suggestions-tbody');
-  tbody.innerHTML = '';
-  data.suggestions.forEach((s, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_SUGGEST, s.status, v => data.suggestions[i].status = v);
-    const decisionEl = makeEditable(s.decision, v => data.suggestions[i].decision = v);
-    const closedEl = makeEditable(s.closed, v => data.suggestions[i].closed = v);
-    const referralEl = makeEditable(s.referral, v => data.suggestions[i].referral = v);
+// ========= RENDER: SUGGESTIONS =========
+const S_PART=['منتدى نقاش','مشورة','استطلاع رأي','مدونة','منتدى إلكتروني','أخرى'];
 
-    tr.innerHTML = `<td class="weight-cell">${i+1}</td>
-      <td style="font-size:12px;white-space:nowrap;">${s.date}</td>
-      <td><span class="tag tag-blue">${s.source}</span></td>
-      <td style="max-width:250px;font-size:13px;">${s.text}</td>
-      <td style="font-size:12px;">${s.dept}</td>
-      <td></td><td></td><td></td><td></td>`;
-    tr.cells[5].appendChild(referralEl);
-    tr.cells[6].appendChild(statusSel);
-    tr.cells[7].appendChild(decisionEl);
-    tr.cells[8].appendChild(closedEl);
-    tbody.appendChild(tr);
-  });
+function renderSug() {
+  const tb = document.getElementById('sug-body');
+  if (!tb) return;
+  // Build color map per unique partTitle
+  const titles = [...new Set((D.suggestions||[]).map(r => r.partTitle||''))];
+  const palette = ['rgba(31,56,100,0.06)','rgba(212,167,42,0.10)','rgba(46,103,151,0.09)','rgba(39,174,96,0.09)','rgba(155,89,182,0.08)','rgba(231,76,60,0.07)'];
+  const colorMap = {};
+  titles.forEach((t,i) => colorMap[t] = palette[i % palette.length]);
+
+  tb.innerHTML = (D.suggestions||[]).map((r,i) => {
+    const bg = colorMap[r.partTitle||''] || '';
+    return '<tr style="background:' + bg + '">' +
+      '<td class="drag-handle">⠇</td>' +
+      '<td style="text-align:center">' + (i+1) + '</td>' +
+      '<td>' + ec('suggestions',i,'date','تاريخ') + '</td>' +
+      '<td>' + ss('suggestions',i,'partType',S_PART) + '</td>' +
+      '<td>' + ec('suggestions',i,'partTitle','عنوان المشاركة على شارك') + '</td>' +
+      '<td>' + ec('suggestions',i,'text','نص الاقتراح/التعليق') + '</td>' +
+      '<td>' + ec('suggestions',i,'dept','الجهة') + '</td>' +
+      '<td>' + ec('suggestions',i,'referral','تاريخ الإحالة') + '</td>' +
+      '<td>' + ss('suggestions',i,'status',S_SUG) + '</td>' +
+      '<td>' + ec('suggestions',i,'decision','القرار') + '</td>' +
+      '<td>' + ec('suggestions',i,'closed','تاريخ الإغلاق') + '</td>' +
+      delBtn('suggestions',i,'suggestions') + '</tr>';
+  }).join('');
+  setupDragDrop(tb,'suggestions','suggestions');
 }
 
-// ==================== DAILY LOG ====================
+// ========= RENDER: DAILY LOG =========
 function renderLog() {
-  filterLog();
+  const search = ((document.getElementById('log-search')||{}).value||'').toLowerCase();
+  const filter = (document.getElementById('log-filter')||{}).value||'';
+  const tb = document.getElementById('log-body');
+  if (!tb) return;
+  tb.innerHTML = (D.dailyLog||[]).map((r,i) => {
+    if (search && !JSON.stringify(r).toLowerCase().includes(search)) return '';
+    if (filter && (r.initiative||'') !== filter) return '';
+    return '<tr><td class="drag-handle">⠇</td>' +
+      '<td>' + ec('dailyLog',i,'date','DD/MM/YYYY') + '</td>' +
+      '<td>' + ec('dailyLog',i,'day','اليوم') + '</td>' +
+      '<td>' + ec('dailyLog',i,'initiative','المبادرة') + '</td>' +
+      '<td>' + ec('dailyLog',i,'type','نوع النشاط') + '</td>' +
+      '<td>' + ec('dailyLog',i,'task','الوصف') + '</td>' +
+      '<td>' + lc('dailyLog',i,'link') + '</td>' +
+      '<td>' + ec('dailyLog',i,'dp','DP') + '</td>' +
+      delBtn('dailyLog',i,'dailylog') + '</tr>';
+  }).join('');
+  setupDragDrop(tb,'dailyLog','dailylog');
 }
 
-function filterLog() {
-  const search = (document.getElementById('log-search')?.value || '').toLowerCase();
-  const filterVal = (document.getElementById('log-filter')?.value || '');
-  const tbody = document.getElementById('log-tbody');
-  tbody.innerHTML = '';
-  data.dailyLog.filter(l => {
-    const matchSearch = !search || l.task.toLowerCase().includes(search) || l.initiative.toLowerCase().includes(search);
-    const matchFilter = !filterVal || l.initiative === filterVal;
-    return matchSearch && matchFilter;
-  }).forEach((l, i) => {
-    const realIdx = data.dailyLog.indexOf(l);
-    const tr = document.createElement('tr');
-    const typeColors = { '📱 نشر بوست':'tag-blue', '📋 جمع دليل':'tag-gold', '✅ مهمة أنجزت':'tag-green', '💬 متابعة اقتراح':'tag-blue', '📧 إيميل مهم':'tag-gold' };
-    const tc = typeColors[l.type] || 'tag-blue';
-    tr.innerHTML = `<td style="font-weight:700;white-space:nowrap;color:var(--navy);">${l.date}</td>
-      <td style="font-size:12px;">${l.day}</td>
-      <td style="font-size:12px;">${l.initiative}</td>
-      <td><span class="tag ${tc}">${l.type}</span></td>
-      <td style="max-width:250px;">${l.task}</td>
-      <td>${linkCell(l.link)}</td>
-      <td><span class="tag tag-gold">${l.dp || '-'}</span></td>`;
-    tbody.appendChild(tr);
+// ========= RENDER: QUARTERLY =========
+function renderQtr() {
+  const tb = document.getElementById('qtr-body');
+  if (!tb) return;
+  tb.innerHTML = (D.quarterly||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td>' + ec('quarterly',i,'item','البند') + '</td>' +
+    '<td>' + ec('quarterly',i,'q1','') + '</td>' +
+    '<td>' + ec('quarterly',i,'q2','') + '</td>' +
+    '<td>' + ec('quarterly',i,'q3','') + '</td>' +
+    '<td>' + ec('quarterly',i,'q4','') + '</td>' +
+    delBtn('quarterly',i,'quarterly') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'quarterly','quarterly');
+}
+
+// ========= RENDER: MARKETING =========
+function renderMkt() {
+  const tb = document.getElementById('mkt-body');
+  if (!tb) return;
+  tb.innerHTML = (D.marketing||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td>' + ec('marketing',i,'quarter','الربع') + '</td>' +
+    '<td>' + ec('marketing',i,'month','الشهر') + '</td>' +
+    '<td>' + ec('marketing',i,'tool','الأداة') + '</td>' +
+    '<td>' + ec('marketing',i,'message','الرسالة') + '</td>' +
+    '<td>' + ec('marketing',i,'content','المحتوى') + '</td>' +
+    '<td>' + ec('marketing',i,'kind','النوع') + '</td>' +
+    '<td>' + ss('marketing',i,'status',S_DP) + '</td>' +
+    '<td>' + lc('marketing',i,'link') + '</td>' +
+    delBtn('marketing',i,'marketing') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'marketing','marketing');
+}
+
+// ========= RENDER: MONITORING =========
+function renderMon() {
+  const tb = document.getElementById('mon-body');
+  if (!tb) return;
+  tb.innerHTML = (D.monitoring||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td>' + ec('monitoring',i,'quarter','الربع') + '</td>' +
+    '<td>' + ec('monitoring',i,'week','الأسبوع') + '</td>' +
+    '<td>' + ec('monitoring',i,'tool','الأداة') + '</td>' +
+    '<td>' + ec('monitoring',i,'content','نوع المحتوى') + '</td>' +
+    '<td>' + ec('monitoring',i,'message','الرسالة') + '</td>' +
+    '<td>' + ec('monitoring',i,'idea','فكرة المنشور') + '</td>' +
+    '<td>' + ss('monitoring',i,'status',S_DP) + '</td>' +
+    '<td>' + lc('monitoring',i,'link') + '</td>' +
+    delBtn('monitoring',i,'monitoring') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'monitoring','monitoring');
+}
+
+// ========= RENDER: COUNCILS =========
+function renderCou() {
+  const tb = document.getElementById('cou-body');
+  if (!tb) return;
+  tb.innerHTML = (D.councils||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td style="text-align:center">' + (i+1) + '</td>' +
+    '<td>' + ec('councils',i,'date','التاريخ') + '</td>' +
+    '<td>' + ec('councils',i,'type','نوع العمل') + '</td>' +
+    '<td>' + ec('councils',i,'title','عنوان') + '</td>' +
+    '<td>' + ec('councils',i,'dept','الجهة') + '</td>' +
+    '<td>' + ss('councils',i,'status',S_COU) + '</td>' +
+    '<td>' + lc('councils',i,'link') + '</td>' +
+    '<td>' + ec('councils',i,'notes','ملاحظات') + '</td>' +
+    delBtn('councils',i,'councils') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'councils','councils');
+}
+
+// ========= RENDER: STARS7 =========
+function renderS7() {
+  const tb = document.getElementById('s7-body');
+  if (!tb) return;
+  tb.innerHTML = (D.stars7||[]).map((r,i) =>
+    '<tr><td class="drag-handle">⠇</td>' +
+    '<td style="text-align:center;color:var(--gold);font-weight:700">' + (i+1) + '</td>' +
+    '<td>' + ec('stars7',i,'date','تاريخ النشر') + '</td>' +
+    '<td>' + ec('stars7',i,'type','نوع البوست') + '</td>' +
+    '<td>' + ec('stars7',i,'content','محتوى المنشور') + '</td>' +
+    '<td>' + ec('stars7',i,'hashtags','الهاشتاقات') + '</td>' +
+    '<td>' + ss('stars7',i,'status',S_S7) + '</td>' +
+    '<td>' + lc('stars7',i,'link') + '</td>' +
+    '<td>' + ec('stars7',i,'notes','ملاحظات') + '</td>' +
+    delBtn('stars7',i,'stars7') + '</tr>'
+  ).join('');
+  setupDragDrop(tb,'stars7','stars7');
+}
+
+// ========= WEEKLY REPORT =========
+function getWeekDates() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 6=Sat
+  const diffToSat = (day === 6) ? 0 : (day + 1);
+  const sat = new Date(now); sat.setDate(now.getDate() - diffToSat);
+  const fri = new Date(sat); fri.setDate(sat.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('ar-AE', {day:'2-digit',month:'long',year:'numeric'});
+  return { sat, fri, label: fmt(sat) + ' – ' + fmt(fri) };
+}
+
+function renderWeekly() {
+  const { sat, fri, label } = getWeekDates();
+  const datesEl = document.getElementById('wr-dates');
+  if (datesEl) datesEl.textContent = 'الأسبوع: ' + label;
+
+  // Auto-entries from dailyLog this week
+  const autoEntries = (D.dailyLog||[]).filter(r => {
+    if (!r.date) return false;
+    const p = r.date.split('/');
+    if (p.length !== 3) return false;
+    const d = new Date(+p[2], +p[1]-1, +p[0]);
+    return !isNaN(d) && d >= sat && d <= fri;
   });
-}
 
-// ==================== QUARTERLY ====================
-function renderQuarterly() {
-  const tbody = document.getElementById('quarterly-tbody');
-  tbody.innerHTML = '';
-  data.quarterly.forEach((q, i) => {
-    const tr = document.createElement('tr');
-    const q1El = makeEditable(q.q1, v => data.quarterly[i].q1 = v);
-    const q2El = makeEditable(q.q2, v => data.quarterly[i].q2 = v);
-    const q3El = makeEditable(q.q3, v => data.quarterly[i].q3 = v);
-    const q4El = makeEditable(q.q4, v => data.quarterly[i].q4 = v);
-    tr.innerHTML = `<td style="font-weight:700;color:var(--navy);background:var(--light-bg);">${q.item}</td><td></td><td></td><td></td><td></td>`;
-    tr.cells[1].appendChild(q1El);
-    tr.cells[2].appendChild(q2El);
-    tr.cells[3].appendChild(q3El);
-    tr.cells[4].appendChild(q4El);
-    tbody.appendChild(tr);
-  });
-}
+  const wr = D.weeklyReport || {};
+  const doneList = document.getElementById('wr-done-list');
+  const nextList = document.getElementById('wr-next-list');
+  const chEl = document.getElementById('wr-challenges');
+  const cntEl = document.getElementById('wr-done-count');
+  const dpSumEl = document.getElementById('wr-dp-summary');
+  const histEl = document.getElementById('wr-history');
 
-// ==================== MARKETING ====================
-function renderMarketing() {
-  const tbody = document.getElementById('marketing-tbody');
-  tbody.innerHTML = '';
-  data.marketing.forEach((m, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_DP, m.status, v => data.marketing[i].status = v);
-    const linkEl = makeEditable(m.link, v => data.marketing[i].link = v);
-    tr.innerHTML = `<td style="font-weight:700;color:var(--navy);white-space:nowrap;">${m.quarter}</td>
-      <td style="font-size:12px;white-space:nowrap;">${m.period}</td>
-      <td><span class="tag tag-blue">${m.tool}</span></td>
-      <td style="font-size:12px;font-style:italic;">${m.message}</td>
-      <td style="max-width:200px;font-size:12px;">${m.content}</td>
-      <td><span class="tag tag-gold">${m.type}</span></td>
-      <td></td><td></td>`;
-    tr.cells[6].appendChild(statusSel);
-    tr.cells[7].appendChild(linkEl);
-    tbody.appendChild(tr);
-  });
-}
+  if (cntEl) cntEl.textContent = autoEntries.length + (wr.done||[]).length;
 
-// ==================== MONITORING ====================
-function renderMonitoring() {
-  const tbody = document.getElementById('monitoring-tbody');
-  tbody.innerHTML = '';
-  data.monitoring.forEach((m, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_DP, m.status, v => data.monitoring[i].status = v);
-    const linkEl = makeEditable(m.link, v => data.monitoring[i].link = v);
-    tr.innerHTML = `<td style="font-size:12px;white-space:pre-line;">${m.period}</td>
-      <td style="font-size:12px;">${m.week}</td>
-      <td><span class="tag tag-blue">${m.tool}</span></td>
-      <td style="font-size:12px;">${m.type}</td>
-      <td style="font-size:12px;font-style:italic;">${m.message}</td>
-      <td style="max-width:200px;font-size:12px;white-space:pre-line;">${m.content}</td>
-      <td></td><td></td>`;
-    tr.cells[6].appendChild(statusSel);
-    tr.cells[7].appendChild(linkEl);
-    tbody.appendChild(tr);
-  });
-}
+  if (doneList) {
+    const autoHTML = autoEntries.map(r =>
+      '<div class="wr-item"><span class="wr-auto-tag">تلقائي</span><span>' + (r.task||r.type||'') + (r.date?' — '+r.date:'') + '</span></div>'
+    ).join('');
+    const manHTML = (wr.done||[]).map((t,i) =>
+      '<div class="wr-item"><span>✅</span><span style="flex:1">' + t + '</span><button class="wr-del" onclick="removeWRItem(\'done\',' + i + ')">✕</button></div>'
+    ).join('');
+    doneList.innerHTML = (autoHTML + manHTML) || '<div class="wr-empty">لا يوجد إنجازات مسجلة هذا الأسبوع</div>';
+  }
 
-// ==================== COUNCILS ====================
-function renderCouncils() {
-  const tbody = document.getElementById('councils-tbody');
-  tbody.innerHTML = '';
-  data.councils.forEach((c, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_COUNCIL, c.status, v => data.councils[i].status = v);
-    const linkEl = makeEditable(c.link, v => data.councils[i].link = v);
-    const notesEl = makeEditable(c.notes, v => data.councils[i].notes = v);
-    tr.innerHTML = `<td class="weight-cell">${i+1}</td>
-      <td style="font-size:12px;">${c.date}</td>
-      <td><span class="tag tag-blue">${c.type}</span></td>
-      <td style="max-width:220px;font-weight:600;">${c.title}</td>
-      <td style="font-size:12px;">${c.dept}</td>
-      <td></td><td></td><td></td>`;
-    tr.cells[5].appendChild(statusSel);
-    tr.cells[6].appendChild(linkEl);
-    tr.cells[7].appendChild(notesEl);
-    tbody.appendChild(tr);
-  });
-}
+  if (nextList) {
+    nextList.innerHTML = (wr.next||[]).map((t,i) =>
+      '<div class="wr-item"><span>📌</span><span style="flex:1">' + t + '</span><button class="wr-del" onclick="removeWRItem(\'next\',' + i + ')">✕</button></div>'
+    ).join('') || '<div class="wr-empty">أضف خططك للأسبوع القادم</div>';
+  }
 
-// ==================== STARS7 ====================
-function renderStars7() {
-  const tbody = document.getElementById('stars7-tbody');
-  tbody.innerHTML = '';
-  data.stars7.forEach((s, i) => {
-    const tr = document.createElement('tr');
-    const statusSel = makeStatusSelect(STATUS_OPTIONS_STARS, s.status, v => data.stars7[i].status = v);
-    const notesEl = makeEditable(s.notes, v => data.stars7[i].notes = v);
-    tr.innerHTML = `<td class="weight-cell">${i+1}</td>
-      <td style="font-size:12px;white-space:nowrap;">${s.date}</td>
-      <td><span class="tag tag-gold">${s.type}</span></td>
-      <td style="max-width:250px;font-size:12px;">${s.content}</td>
-      <td style="font-size:11px;color:var(--text-light);">${s.hashtags}</td>
-      <td></td>
-      <td>${s.link ? `<a href="${s.link}" target="_blank" style="color:var(--blue);font-size:11px;">🔗 رابط</a>` : ''}</td>
-      <td></td>`;
-    tr.cells[5].appendChild(statusSel);
-    tr.cells[7].appendChild(notesEl);
-    tbody.appendChild(tr);
-  });
-}
+  if (chEl) chEl.value = wr.challenges || '';
 
-// ==================== MODALS ====================
-function openModal(type) {
-  currentModal = type;
-  const overlay = document.getElementById('modal-overlay');
-  const body = document.getElementById('modal-body');
-  overlay.classList.add('open');
+  // DP summary
+  if (dpSumEl) {
+    let dd=0,dp2=0,dn=0;
+    (D.dp||[]).forEach(r => {
+      if(r.status&&r.status.includes('مكتم'))dd++;
+      else if(r.status&&(r.status.includes('قيد')||r.status.includes('جار')))dp2++;
+      else dn++;
+    });
+    dpSumEl.innerHTML = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">' +
+      '<div class="stat-card c-green"><div class="sl">مكتملة</div><div class="sv">' + dd + '</div></div>' +
+      '<div class="stat-card c-orange"><div class="sl">جارية</div><div class="sv">' + dp2 + '</div></div>' +
+      '<div class="stat-card c-red"><div class="sl">لم تبدأ</div><div class="sv">' + dn + '</div></div></div>';
+  }
 
-  if (type === 'log') {
-    document.getElementById('modal-title').textContent = '📝 إضافة إدخال يومي';
-    body.innerHTML = `
-      <div class="form-group"><label class="form-label">التاريخ</label><input class="form-control" id="f-date" type="text" placeholder="DD/MM/YYYY" value="${new Date().toLocaleDateString('ar-AE')}"></div>
-      <div class="form-group"><label class="form-label">اليوم</label><input class="form-control" id="f-day" type="text" placeholder="الأحد"></div>
-      <div class="form-group"><label class="form-label">المبادرة</label>
-        <select class="form-control" id="f-initiative">
-          <option>🌟 خدمات ذات الأولوية</option><option>⭐ 7 نجوم</option><option>📊 DGOSI</option><option>🤝 شارك</option><option>📣 أدوات الرصد</option><option>أخرى</option>
-        </select></div>
-      <div class="form-group"><label class="form-label">نوع النشاط</label>
-        <select class="form-control" id="f-type">
-          <option>📱 نشر بوست</option><option>📋 جمع دليل</option><option>✅ مهمة أنجزت</option><option>💬 متابعة اقتراح</option><option>📧 إيميل مهم</option>
-        </select></div>
-      <div class="form-group"><label class="form-label">التاسك / الوصف</label><textarea class="form-control" id="f-task"></textarea></div>
-      <div class="form-group"><label class="form-label">رابط / دليل</label><input class="form-control" id="f-link" type="text"></div>
-      <div class="form-group"><label class="form-label">DP المرتبط</label><input class="form-control" id="f-dp" type="text" placeholder="مثال: DP3"></div>`;
-  } else if (type === 'suggestion') {
-    document.getElementById('modal-title').textContent = '💬 إضافة اقتراح جديد';
-    body.innerHTML = `
-      <div class="form-group"><label class="form-label">تاريخ الورود</label><input class="form-control" id="f-date" type="text" value="${new Date().toLocaleDateString('ar-AE')}"></div>
-      <div class="form-group"><label class="form-label">المصدر</label>
-        <select class="form-control" id="f-source">
-          <option>شارك</option><option>إنستغرام</option><option>تويتر/X</option><option>البريد الإلكتروني</option><option>أخرى</option>
-        </select></div>
-      <div class="form-group"><label class="form-label">نص الاقتراح/التعليق</label><textarea class="form-control" id="f-text"></textarea></div>
-      <div class="form-group"><label class="form-label">الجهة المعنية للمتابعة</label><input class="form-control" id="f-dept" type="text"></div>
-      <div class="form-group"><label class="form-label">الحالة</label>
-        <select class="form-control" id="f-status"><option>جديد</option><option>🔄 قيد المتابعة</option><option>✅ مغلق</option></select></div>`;
-  } else if (type === 'sharak') {
-    document.getElementById('modal-title').textContent = '📅 إضافة نشاط شارك';
-    body.innerHTML = `
-      <div class="form-group"><label class="form-label">نوع المشاركة</label>
-        <select class="form-control" id="f-type"><option>منتدى نقاش</option><option>استطلاع رأي</option><option>مشورة</option><option>مدونة</option></select></div>
-      <div class="form-group"><label class="form-label">عنوان المشاركة</label><textarea class="form-control" id="f-title"></textarea></div>
-      <div class="form-group"><label class="form-label">الإدارة المعنية</label><input class="form-control" id="f-dept" type="text"></div>
-      <div class="form-group"><label class="form-label">الفترة الزمنية</label><input class="form-control" id="f-period" type="text"></div>
-      <div class="form-group"><label class="form-label">الحالة</label>
-        <select class="form-control" id="f-status"><option>مستقبلية</option><option>حالية</option><option>مغلق</option></select></div>
-      <div class="form-group"><label class="form-label">DP المرتبط</label><input class="form-control" id="f-dp" type="text"></div>`;
-  } else if (type === 'council') {
-    document.getElementById('modal-title').textContent = '🤝 إضافة عمل مجالس المتعاملين';
-    body.innerHTML = `
-      <div class="form-group"><label class="form-label">التاريخ</label><input class="form-control" id="f-date" type="text" value="${new Date().toLocaleDateString('ar-AE')}"></div>
-      <div class="form-group"><label class="form-label">نوع العمل</label>
-        <select class="form-control" id="f-type"><option>تصميم منشور</option><option>📱 تصميم منشور</option><option>تقرير</option><option>عرض تقديمي</option></select></div>
-      <div class="form-group"><label class="form-label">عنوان/وصف التصميم</label><textarea class="form-control" id="f-title"></textarea></div>
-      <div class="form-group"><label class="form-label">الجهة الطالبة</label><input class="form-control" id="f-dept" type="text" value="قسم تجربة المتعاملين"></div>
-      <div class="form-group"><label class="form-label">الحالة</label>
-        <select class="form-control" id="f-status"><option>✅ تم النشر</option><option>🔄 بانتظار الاعتماد</option><option>⏳ قيد التصميم</option></select></div>
-      <div class="form-group"><label class="form-label">ملاحظات</label><input class="form-control" id="f-notes" type="text"></div>`;
+  if (histEl) {
+    histEl.innerHTML = (wr.history||[]).length ?
+      (wr.history||[]).map(h =>
+        '<div class="wr-hist-item"><strong>' + h.week + '</strong> — إنجازات: ' + h.done + ' | خطط قادمة: ' + (h.next||[]).length + '</div>'
+      ).join('') :
+      '<div class="wr-empty">لا يوجد تقارير سابقة محفوظة</div>';
   }
 }
 
-function saveModal() {
-  if (currentModal === 'log') {
-    data.dailyLog.push({
-      date: document.getElementById('f-date').value,
-      day: document.getElementById('f-day').value,
-      initiative: document.getElementById('f-initiative').value,
-      type: document.getElementById('f-type').value,
-      task: document.getElementById('f-task').value,
-      link: document.getElementById('f-link').value,
-      dp: document.getElementById('f-dp').value
-    });
-    renderLog();
-  } else if (currentModal === 'suggestion') {
-    data.suggestions.push({
-      date: document.getElementById('f-date').value,
-      source: document.getElementById('f-source').value,
-      text: document.getElementById('f-text').value,
-      dept: document.getElementById('f-dept').value,
-      referral: '', status: document.getElementById('f-status').value,
-      decision: '', closed: ''
-    });
-    renderSuggestions();
-  } else if (currentModal === 'sharak') {
-    data.sharak.push({
-      type: document.getElementById('f-type').value,
-      title: document.getElementById('f-title').value,
-      dept: document.getElementById('f-dept').value,
-      sector: 'بنية تحتية / نقل / عام',
-      period: document.getElementById('f-period').value,
-      duration: 'شهر',
-      status: document.getElementById('f-status').value,
-      dp: document.getElementById('f-dp').value,
-      notes: ''
-    });
-    renderSharak();
-  } else if (currentModal === 'council') {
-    data.councils.push({
-      date: document.getElementById('f-date').value,
-      type: document.getElementById('f-type').value,
-      title: document.getElementById('f-title').value,
-      dept: document.getElementById('f-dept').value,
-      status: document.getElementById('f-status').value,
-      link: '', notes: document.getElementById('f-notes')?.value || ''
-    });
-    renderCouncils();
+function addWRItem(type) {
+  const inp = document.getElementById('wr-' + type + '-input');
+  const val = (inp ? inp.value : '').trim();
+  if (!val) return;
+  if (!D.weeklyReport) D.weeklyReport = {done:[],next:[],challenges:'',history:[]};
+  if (!D.weeklyReport[type]) D.weeklyReport[type] = [];
+  D.weeklyReport[type].push(val);
+  if (inp) inp.value = '';
+  save(); renderWeekly();
+}
+
+function removeWRItem(type, i) {
+  if (!D.weeklyReport || !D.weeklyReport[type]) return;
+  D.weeklyReport[type].splice(i, 1);
+  save(); renderWeekly();
+}
+
+function saveWRField() {
+  if (!D.weeklyReport) D.weeklyReport = {done:[],next:[],challenges:'',history:[]};
+  const ch = document.getElementById('wr-challenges');
+  D.weeklyReport.challenges = ch ? ch.value : '';
+  save();
+}
+
+function saveWeeklyReport() {
+  const { label } = getWeekDates();
+  if (!D.weeklyReport) D.weeklyReport = {done:[],next:[],challenges:'',history:[]};
+  if (!D.weeklyReport.history) D.weeklyReport.history = [];
+  const snap = {
+    week: label,
+    done: (D.weeklyReport.done||[]).length,
+    next: [...(D.weeklyReport.next||[])],
+    challenges: D.weeklyReport.challenges||''
+  };
+  const exi = D.weeklyReport.history.findIndex(h => h.week === label);
+  if (exi >= 0) D.weeklyReport.history[exi] = snap;
+  else D.weeklyReport.history.unshift(snap);
+  D.weeklyReport.done = []; D.weeklyReport.next = []; D.weeklyReport.challenges = '';
+  save(); renderWeekly();
+  showToast('تم حفظ التقرير الأسبوعي ✓');
+}
+
+// ========= PDF EXPORT =========
+function exportPDF() { window.print(); }
+
+// ========= QUOTES =========
+const QUOTES=[
+  {t:'العزيمة كالجبال، لا تنهار أمام العواصف.',a:'حكمة عربية'},
+  {t:'كن التغيير الذي تريد رؤيته في العالم.',a:'مهاتما غاندي'},
+  {t:'النجاح يأتي لمن يؤمن بأن أحلامه أكبر من مخاوفه.',a:'جون ماكسويل'},
+  {t:'ما لم يقتلك يجعلك أقوى.',a:'فريدريك نيتشه'},
+  {t:'الوقت كالسيف؛ إن لم تقطعه قطعك.',a:'حكمة عربية'},
+  {t:'الحياة إما مغامرة جريئة وإما لا شيء.',a:'هيلين كيلر'},
+  {t:'لا تنتظر الفرصة؛ اصنعها.',a:'جورج برنارد شو'},
+  {t:'أنت أقوى مما تعتقد، وأشجع مما تظن.',a:'أ. أ. ميلن'},
+  {t:'الإرادة هي المفتاح الذي يفتح كل باب موصد.',a:'حكمة عربية'},
+  {t:'لا تخف من الفشل، بل خف من عدم المحاولة.',a:'حكمة'},
+  {t:'من لا يتقدم يتأخر.',a:'حكمة عربية'},
+  {t:'العقل السليم في الجسم السليم، والهدف الواضح في العقل المتيقظ.',a:'حكمة'},
+  {t:'كل إنجاز عظيم بدأ بقرار واحد: المحاولة.',a:'ويليام لامار'},
+  {t:'الجاهل من عدوّ نفسه يجعل صديقاً.',a:'علي بن أبي طالب'},
+  {t:'ابحث عن الفرصة في كل أزمة.',a:'ونستون تشرشل'},
+  {t:'لا يكفي أن تسعى للنجاح؛ يجب أن تستحقه.',a:'سنيكا'},
+  {t:'أفضل وقت لزرع الشجرة كان منذ عشرين سنة، والوقت الثاني الأفضل هو الآن.',a:'حكمة صينية'},
+  {t:'القمة ليست مكاناً، بل حالة ذهنية.',a:'حكمة'},
+];
+let _qIdx=Math.floor(Math.random()*QUOTES.length);
+function nextQuote(){
+  _qIdx=(_qIdx+1)%QUOTES.length;
+  document.getElementById('qw-text').textContent=QUOTES[_qIdx].t;
+  document.getElementById('qw-author').textContent='— '+QUOTES[_qIdx].a;
+}
+function initQuote(){
+  document.getElementById('qw-text').textContent=QUOTES[_qIdx].t;
+  document.getElementById('qw-author').textContent='— '+QUOTES[_qIdx].a;
+  setInterval(nextQuote,45000);
+}
+
+// ========= AUDIO PLAYER =========
+
+
+// ========= BACKUP DOWNLOAD =========
+function downloadBackup(){
+  const ts=new Date().toLocaleDateString('ar-AE').replace(/\//g,'-');
+  const dataJson=JSON.stringify(D);
+  // Inject current data as preload script into page HTML
+  let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  const preload='<scr'+'ipt>try{localStorage.setItem(\'gcaa_2026_v3\','+JSON.stringify(dataJson)+');}catch(e){}<\/scr'+'ipt>';
+  html=html.replace('</head>',preload+'\n</head>');
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='GCAA_نسخة_احتياطية_'+ts+'.html';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},200);
+  showToast('تم تحميل النسخة الاحتياطية ✓');
+}
+
+// ========= INIT =========
+loadData();
+renderDash();
+initQuote();
+
+
+// ========= FLOATING CHAT =========
+const GEMINI_LS = 'gcaa_gemini_key';
+
+function toggleChat(){
+  const box = document.getElementById('chat-box');
+  box.classList.toggle('open');
+  if(box.classList.contains('open')){
+    const k = localStorage.getItem(GEMINI_LS)||'';
+    if(k){ document.getElementById('chat-key-bar').style.display='none'; }
+    else { document.getElementById('chat-key-bar').style.display='flex'; }
+    document.getElementById('chat-input').focus();
   }
-  document.getElementById('modal-overlay').classList.remove('open');
-  saveAll();
 }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
+function saveKey(){
+  const k = document.getElementById('gemini-key').value.trim();
+  if(!k){ showToast('الصق المفتاح أولاً'); return; }
+  localStorage.setItem(GEMINI_LS, k);
+  document.getElementById('chat-key-bar').style.display='none';
+  showToast('تم حفظ المفتاح ✓');
+  addMsg('ai','تم حفظ مفتاح Gemini! الآن اسألني ما تريد 🎉');
+}
+
+function chatEnter(e){
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); }
+}
+
+function addMsg(role, text){
+  const msgs = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = role==='user' ? 'msg-user' : 'msg-ai';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function addTyping(){
+  const msgs = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'msg-typing';
+  div.id = 'typing-indicator';
+  div.textContent = '●●●';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping(){
+  const t = document.getElementById('typing-indicator');
+  if(t) t.remove();
+}
+
+async function sendChat(){
+  const inp = document.getElementById('chat-input');
+  const q = (inp.value||'').trim();
+  if(!q) return;
+  const key = localStorage.getItem(GEMINI_LS);
+  if(!key){
+    document.getElementById('chat-key-bar').style.display='flex';
+    showToast('أدخل مفتاح Gemini أولاً');
+    return;
+  }
+  inp.value='';
+  addMsg('user', q);
+  addTyping();
+
+  const sysPrompt = 'أنت مساعد ذكي متخصص في شرح معايير نظام متابعة المشاركة الرقمية للهيئة العامة للطيران المدني (GCAA) بالإمارات. المعايير الرئيسية هي DP1 إلى DP11 وتتعلق بالمشاركة الرقمية عبر منصة شارك. أجب دائماً بالعربية بشكل واضح ومختصر وعملي.';
+
+  try {
+    const res = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,
+      {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          system_instruction:{ parts:[{text: sysPrompt}] },
+          contents:[{ role:'user', parts:[{text: q}] }],
+          generationConfig:{ maxOutputTokens:400, temperature:0.7 }
+        })
+      }
+    );
+    if(!res.ok){
+      const err = await res.json();
+      removeTyping();
+      addMsg('ai','❌ خطأ: '+(err.error?.message||res.status)+'. تحقق من المفتاح.');
+      return;
+    }
+    const data = await res.json();
+    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || 'لم أتمكن من الإجابة.';
+    removeTyping();
+    addMsg('ai', answer);
+  } catch(e){
+    removeTyping();
+    addMsg('ai','❌ تعذر الاتصال. تحقق من الإنترنت أو المفتاح.');
   }
 }
 
-// ==================== PDF EXPORT ====================
-function exportPDF() {
-  const section = document.getElementById('section-' + currentSection);
-  if (!section) return;
-  showToast('⏳ جاري تصدير PDF...');
-  document.querySelectorAll('.section').forEach(s => s.classList.add('print-active'));
-  document.querySelectorAll('.section:not(#section-' + currentSection + ')').forEach(s => s.classList.remove('print-active'));
-  setTimeout(() => {
-    window.print();
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('print-active'));
-    showToast('✅ تم فتح نافذة الطباعة!');
-  }, 300);
-}
-
-// ==================== INIT ====================
-renderDashboard();
-renderDP();
 </script>
+
+<!-- FLOATING CHAT -->
+<button class="chat-fab" onclick="toggleChat()" title="مساعد ذكي">
+  💬<span class="chat-badge"></span>
+</button>
+
+<div class="chat-box" id="chat-box">
+  <div class="chat-head">
+    <span class="ch-icon">🤖</span>
+    <span>مساعد ذكي<span class="ch-sub">اسأل عن أي معيار أو نقطة</span></span>
+    <button class="ch-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-key-bar" id="chat-key-bar">
+    <input type="password" id="gemini-key" placeholder="الصق مفتاح Gemini API هنا..." />
+    <button onclick="saveKey()">حفظ</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg-ai">مرحباً! 👋 أنا مساعدك الذكي لنظام متابعة المشاركة الرقمية. اسألني عن أي معيار أو نقطة وسأشرحها لك.</div>
+  </div>
+  <div class="chat-input-row">
+    <textarea id="chat-input" placeholder="اكتب سؤالك هنا..." onkeydown="chatEnter(event)"></textarea>
+    <button onclick="sendChat()">➤</button>
+  </div>
+</div>
+
 </body>
 </html>
